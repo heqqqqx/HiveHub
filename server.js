@@ -13,8 +13,15 @@ const app = express();
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname+'/public/drag&slid.html');
+    res.sendFile(__dirname+'/public/html/drag&slid.html');
 });
+
+app.get('/index', (req, res) => {
+    res.sendFile(__dirname+'/public/html/index.html');
+});
+
+
+
 
 app.post('/upload', upload.single('file'), (req, res) => {
     async function uploadFile() {
