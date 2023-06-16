@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+</head>
+<body>
+
+<h2>Drag and Drop File Upload</h2>
+<div id="drop_zone" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event)">
+    Drop files here
+</div>
+<img id="file_icon" src="image_pdf.png" width="50" height="50" style="display: none;">
+<br>
+<p id="file_name"></p>
+<input type="button" value="Supprimer" onclick="deleteFile()" id="delete_button" style="display: none;">
+<input type="button" value="Upload" onclick="uploadFile()">
+
+<script>
+let selectedFile;
+const dropZone = document.getElementById('drop_zone');
+const fileIcon = document.getElementById('file_icon');
+const fileName = document.getElementById('file_name');
+const deleteButton = document.getElementById('delete_button');
+
+function handleDragOver(event) {
+  event.preventDefault();
+}
+
+function handleFileDrop(event) {
+  event.preventDefault();
+  selectedFile = event.dataTransfer.files[0];
+  fileIcon.style.display = 'block'; // Affiche l'icône du fichier
+  fileName.textContent = selectedFile.name; // Affiche le nom du fichier
+  fileName.style.display = 'block'; // Affiche le nom du fichier
+  deleteButton.style.display = 'inline-block'; // Affiche le bouton Supprimer
+  console.log(selectedFile);
+}
+
+function deleteFile() {
+  selectedFile = null; // Réinitialise la variable selectedFile
+  fileIcon.style.display = 'none'; // Masque l'icône du fichier
+  fileName.textContent = ''; // Efface le nom du fichier
+  fileName.style.display = 'none'; // Masque le nom du fichier
+  deleteButton.style.display = 'none'; // Masque le bouton Supprimer
+}
+
+function uploadFile() {
+  if (selectedFile) {
+    let formData = new FormData();
+    formData.append("file", selectedFile);
+
+    fetch('/upload', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(result => {
+      console.log('Success:', result);
+      selectedFile = null; // Réinitialise la variable selectedFile
+      fileIcon.style.display = 'none'; // Masque l'icône du fichier
+      fileName.textContent = ''; // Efface le nom du fichier
+      fileName.style.display = 'none'; // Masque le nom du fichier
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }
+}
+</script>
+
+</body>
+</html>
