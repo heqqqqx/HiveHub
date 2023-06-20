@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Prêts immobiliers</title>
+    <script>
+        function calculateAmount() {
+            var salaire = parseFloat(document.getElementById('salaire').value);
+            var revenueExterne = parseFloat(document.getElementById('revenue-externe').value);
+            var cdiChecked = document.getElementById('contrat-cdi').checked;
+            var periodeEssaiChecked = document.getElementById('hors-periode-essai').checked;
+            
+            if (!cdiChecked || !periodeEssaiChecked) {
+                document.getElementById('montant-calculé').textContent = "Il n'est pas possible de prendre un prêt sans un CDI stable.";
+                return;
+            }
+            
+            var montant = 0.2 * (revenueExterne + salaire)*36;
+            document.getElementById('montant-calculé').textContent = "Montant calculé : " + montant.toFixed(2)+ "sur 3 ans";
+        }
+    </script>
+</head>
+<body>
+    <h1>Demande de prêt immobilier</h1>
+    
+    <form onsubmit="calculateAmount(); return false;">
+        <label for="age">Âge :</label>
+        <input type="number" id="age" name="age" required><br>
+        
+        <label for="nb-enfants">Nombre d'enfants :</label>
+        <input type="number" id="nb-enfants" name="nb-enfants" required><br>
+        
+        <label for="nationalite">Nationalité :</label>
+        <select id="nationalite" name="nationalite">
+            <option value="francaise">Française</option>
+            <option value="autres">Autres</option>
+        </select><br>
+        
+        <label for="ville">Ville :</label>
+        <input type="text" id="ville" name="ville" required><br>
+        
+        <input type="checkbox" id="contrat-cdi" name="contrat-cdi">
+        <label for="contrat-cdi">Contrat de travail : CDI</label><br>
+        
+        <input type="checkbox" id="hors-periode-essai" name="hors-periode-essai">
+        <label for="hors-periode-essai">Hors de période d'essai</label><br>
+        
+        <label for="salaire">Salaire mensuel net :</label>
+        <input type="number" id="salaire" name="salaire" required><br>
+        
+        <label for="revenue-externe">Revenus externes :</label>
+        <input type="number" id="revenue-externe" name="revenue-externe" required><br>
+        
+        <label for="apport-personnel">Apport personnel :</label>
+        <input type="number" id="apport-personnel" name="apport-personnel" required><br>
+        
+        <input type="submit" value="Envoyer">
+    </form>
+
+    <p id="montant-calculé"></p>
+</body>
+</html>

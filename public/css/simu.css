@@ -1,0 +1,14 @@
+body {
+    font-family: sourcesanspro, Arial, Helvetica, sans-serif;
+    margin: 0px;
+    background-image: url(../image/background-image-2.png);
+    background-repeat: no-repeat;
+  }
+  
+form{
+    display: flex;
+    flex-direction: column;
+    background-color: bisque;
+    width: 600px;
+    margin: auto;
+}
