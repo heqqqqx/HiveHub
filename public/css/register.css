@@ -1,0 +1,71 @@
+body {
+    font-family: sourcesanspro, Arial, Helvetica, sans-serif;
+    margin: 0px;
+    display: block;
+  }
+  
+  .container {
+    display: flex;
+    width: 400px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  .form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 70px); /* subtract the height of the navbar, change the value according to your navbar's height */
+    box-sizing: border-box;
+}
+  .form-group.submit-button {
+    text-align: center;
+  }
+  
+  .form-group.input-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0 20px; /* Ajout de marges à droite et à gauche */
+  }
+  
+  .form-group.input-fields input[type="text"],
+  .form-group.input-fields input[type="email"],
+  .form-group.input-fields input[type="password"],
+  .form-group.input-fields input[type="file"],
+  .form-group.input-fields input[type="date"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+  }
+  
+  .form-group.input-fields .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .form-group.input-fields .row input[type="text"],
+  .form-group.input-fields .row input[type="date"] {
+    flex: 1; /* Utilisation de flex pour occuper l'espace disponible */
+  }
+  
+  .form-group.submit-button button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .form-group.submit-button button:hover {
+    background-color: #45a049;
+  }
+  
