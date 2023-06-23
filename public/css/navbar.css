@@ -1,0 +1,84 @@
+body {
+  font-family: sourcesanspro, Arial, Helvetica, sans-serif;
+  margin: 0px;
+}
+
+#navbar {
+  display: flex;
+  margin-top: 0px;
+  justify-content: space-between;
+  padding: 10px 50px;
+  background-color: #1e2126;
+}
+
+#navbar::after {
+
+  content: "";
+  flex-grow: 1;
+}
+
+#nav-items ul {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  list-style: none;
+  color: #ffffff;
+}
+
+#nav-items ul li {
+  margin-left: 20px;
+}
+
+#navbar a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+#navbar a:hover {
+  color: #ff914d;
+  border-bottom: 2px solid #ff914d;
+  -webkit-transition: all 400ms linear 0s;
+  -o-transition: all 400ms linear 0s;
+  transition: all 400ms linear 0s;
+}
+
+
+
+#client-space {
+  border: #ff914d 3px solid;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+}
+
+
+#navbar .vertical_bar {
+  color:#ff914d;
+}
+
+h1 {
+  font-size: 40px;
+  color: #ffffff;
+  margin: 0px;
+  margin-bottom: 50px;
+}
+
+p {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+
+.cadenas-icon {
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+}
+
+.logo {
+  height: 70px;
+  width: 70px;
+}
