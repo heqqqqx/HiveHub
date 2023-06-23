@@ -185,7 +185,7 @@ app.get('/download/:fileId', async (req, res) => {
     const filePath = path.join(tmpDir, fileId);
     console.log('File path:', filePath);
     
-    const destination = filePath;  // Sauvegardez le chemin du fichier dans une autre variable
+    const destination = filePath;  
     const options = {
         destination: destination,
     };
