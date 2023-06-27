@@ -32,13 +32,15 @@ app.get('/register', (req, res) => {
 app.get('/simu', (req, res) => {
     res.sendFile(__dirname + '/public/html/simu.html');
 });
-
+app.get('/annonces', (req, res) => {
+    res.sendFile(__dirname + '/public/html/displayAnnonces.html');
+});
 
 // MySQL Connection
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root', // your mysql username
-    password: '1234', // your mysql password
+    password: 'root', // your mysql password
     database: 'solution_factory' // your database name
 });
 connection.connect(error => {
@@ -122,6 +124,14 @@ app.post('/create-account', (req, res) => {
 
 
 
+app.get('/getdata', (req, res) => {
+    let sql = 'SELECT * FROM annonces';
+    connection.query(sql, (err, results) => {
+        if(err) throw err;
+        console.log(results);
+        res.send(results);
+    });
+});
 app.post('/login', (req, res) => {
     const { email, mot_de_passe } = req.body;
 
@@ -187,7 +197,6 @@ app.get('/session', (req, res) => {
         }
     });
 });
-
 
 
 
