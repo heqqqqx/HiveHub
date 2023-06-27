@@ -7,7 +7,8 @@ function addAnnonce() {
     var prix = document.getElementById("price").value;
     var surface = document.getElementById("surface").value;
     var description = document.getElementById("description").value;
-    var date = new Date();
+
+    var date=null;
 
     fetch('/create-annonce', {
         method: 'POST',

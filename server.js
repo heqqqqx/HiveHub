@@ -19,17 +19,17 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname+'/public/html/drag&slid.html');
+    res.sendFile(__dirname + '/public/html/createAnnonce.html');
 });
 
 app.get('/index', (req, res) => {
-    res.sendFile(__dirname+'/public/html/index.html');
+    res.sendFile(__dirname + '/public/html/index.html');
 });
 app.get('/register', (req, res) => {
-    res.sendFile(__dirname+'/public/html/register.html');
+    res.sendFile(__dirname + '/public/html/register.html');
 });
 app.get('/simu', (req, res) => {
-    res.sendFile(__dirname+'/public/html/simu.html');
+    res.sendFile(__dirname + '/public/html/simu.html');
 });
 
 
@@ -37,7 +37,7 @@ app.get('/simu', (req, res) => {
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root', // your mysql username
-    password: '{Al37_Be36', // your mysql password
+    password: '1234', // your mysql password
     database: 'solution_factory' // your database name
 });
 connection.connect(error => {
@@ -89,7 +89,7 @@ app.post('/create-account', (req, res) => {
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
                     connection.query(sql, [nom, prenom, date_naissance, adresse, email, mot_de_passe, type_utilisateur, date_inscription], (error, results) => {
-                        if(error) {
+                        if (error) {
                             console.error(error);
                             res.status(500).send({ message: 'Server Error' });
                         } else {
@@ -148,7 +148,7 @@ app.post('/upload', upload.array('file'), (req, res) => {
         const newFilename = `fichier${index + 1}-23`;
         const filePath = path.join(uploadDirectory, newFilename);
 
-        await fs.promises.rename(file.path, filePath); 
+        await fs.promises.rename(file.path, filePath);
 
         await storage.bucket(bucketName).upload(filePath, {
             gzip: true,
@@ -174,22 +174,22 @@ app.post('/upload', upload.array('file'), (req, res) => {
 
 app.get('/download/:fileId', async (req, res) => {
     const fileId = req.params.fileId;
-    console.log('File ID:', fileId); 
+    console.log('File ID:', fileId);
 
     const tmpDir = os.tmpdir();
-    console.log('Temp directory:', tmpDir); 
+    console.log('Temp directory:', tmpDir);
 
     console.log('Temp directory:', tmpDir);
     console.log('File ID:', fileId);
-    
+
     const filePath = path.join(tmpDir, fileId);
     console.log('File path:', filePath);
-    
-    const destination = filePath;  
+
+    const destination = filePath;
     const options = {
         destination: destination,
     };
-    
+
     try {
         await storage.bucket(bucketName).file(fileId).download(options);
         console.log(`File ${fileId} downloaded to ${destination}`);
@@ -199,10 +199,10 @@ app.get('/download/:fileId', async (req, res) => {
         res.status(500).send('Error downloading file');
         return;
     }
-    
+
     console.log(`Sending file ${fileId} to client...`);
     console.log('Path to send file:', destination);
-    
+
     try {
         res.download(destination);
         console.log(`File ${fileId} sent to client`);
@@ -210,9 +210,26 @@ app.get('/download/:fileId', async (req, res) => {
         console.error(`Error sending file ${fileId} to client:`, error);
         res.status(500).send('Error sending file to client');
     }
-    
-});
 
+});
+let id=30;
+let id_dosier=0;
+app.post('/create-annonce', (req, res) => {
+    let { name, state, city, zipCode, address, prix, date, surface, description } = req.body;
+    id++;
+    id_dosier++;
+    date = new Date().toISOString().slice(0, 10);
+    let query = `INSERT INTO Annonces (id_annonce, titre_annonce, prix_bien, surface, descriptions, date_annonce, zip_code, city, state, address) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    connection.query(query,[id,name,prix,surface,description,date,zipCode,city,state,address] , (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server Error' });
+        } else {
+            res.status(200).send({ id: results.insertId, message: 'Annonce created successfully' });
+        }
+    });
+});
 
 
 
