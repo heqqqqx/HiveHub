@@ -38,7 +38,7 @@ app.get('/simu', (req, res) => {
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root', // your mysql username
-    password: '{Al37_Be36', // your mysql password
+    password: '1234', // your mysql password
     database: 'solution_factory' // your database name
 });
 connection.connect(error => {
@@ -268,7 +268,24 @@ app.get('/download/:fileId', async (req, res) => {
     
 });
 
-
+let id=30;
+let id_dosier=0;
+app.post('/create-annonce', (req, res) => {
+    let { name, state, city, zipCode, address, prix, date, surface, description } = req.body;
+    id++;
+    id_dosier++;
+    date = new Date().toISOString().slice(0, 10);
+    let query = `INSERT INTO Annonces (id_annonce, titre_annonce, prix_bien, surface, descriptions, date_annonce, zip_code, city, state, address) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    connection.query(query,[id,name,prix,surface,description,date,zipCode,city,state,address] , (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server Error' });
+        } else {
+            res.status(200).send({ id: results.insertId, message: 'Annonce created successfully' });
+        }
+    });
+});
 
 
 
