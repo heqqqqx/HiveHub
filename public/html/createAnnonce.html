@@ -1,14 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../css/createAnnonce.css">
 </head>
-
 <body>
+    <form action="">
+        <h1>Fill in the form to create an annonce</h1>
 
+        <label for="" require>Name of the annonce</label>
+        <input type="text" id="title" required>
+
+        <label for="" require>State</label>
+        <input type="text" id="state" required>
+
+        <label for="">City</label>
+        <input type="text" id="city" required>
+
+        <label for="">Zip Code</label>
+        <input type="text" id="zipCode" required>
+
+        <label for="">Address</label>
+        <input type="text" id="address" required>
+
+        <label for="">Date</label>
+        <input type="text" id="date" required>
+
+        <label for="" require>Price</label>
+        <input type="text" id="price" required>
+
+        <label for="">Surface</label>
+        <input type="text" id="surface" required>
+
+        <label for="" require>Describe the ad</label>
+        <input type="text" id="description" required>
+
+        <button type="button" onclick="addAnnonce()">Next</button>
+    </form>
+    <script src="../js/createAnnonce.js"></script>
 </body>
-
 </html>
