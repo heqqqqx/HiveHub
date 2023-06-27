@@ -2,9 +2,9 @@ body {
     font-family: Arial, sans-serif;
 }
 
-#drop_zone {
+#drop_zone1, #drop_zone2, #drop_zone3 {
     width: 400px;
-    height: 400px;
+    height: 200px;
     border: 2px dashed #008CBA;
     display: flex;
     justify-content: center;
@@ -19,35 +19,24 @@ body {
     transition: border 0.3s ease-in-out;
 }
 
-#drop_zone:hover {
+#drop_zone1:hover, #drop_zone2:hover, #drop_zone3:hover {
     border-color: #4CAF50;
 }
 
-#drop_zone::after {
+#drop_zone1::after, #drop_zone2::after, #drop_zone3::after {
     display: block;
     margin-top: 10px;
     color: #888888;
     font-size: 14px;
 }
 
-#file_icon {
-    display: none;
-    margin-bottom: 10px;
-}
-
-
-#drop_zone::after {
-    display: block;
-    margin-top: 10px;
-}
-
-#file_icon {
+#file_icon1, #file_icon2, #file_icon3 {
     display: none;
     margin-bottom: 10px;
 }
 
 input[type="button"] {
-    background-color: #008CBA; /* Blue */
+    background-color: #008CBA; /* Blue*/
     border: none;
     color: white;
     padding: 15px 32px;
@@ -61,6 +50,6 @@ input[type="button"] {
 }
 
 input[type="button"]:hover {
-    background-color: #4CAF50; /* Green */
+    background-color: #4CAF50; /*Green */
     color: white;
 }

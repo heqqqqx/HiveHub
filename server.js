@@ -2,19 +2,18 @@ const express = require('express');
 const multer = require('multer');
 const upload = multer({ dest: 'upload/' });
 const { Storage } = require('@google-cloud/storage');
-<<<<<<< Updated upstream
-=======
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
-const jwt = require('jsonwebtoken');
->>>>>>> Stashed changes
+const os = require('os');
 
 // Crée un client
 const storage = new Storage({ keyFilename: "helpful-pixel-389707-0ca50844ca16.json" });
 const bucketName = 'web_project_solution_factory';
-
 const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+
 
 // Serve static files from the "public" directory
 app.use(express.static('public'));
@@ -26,27 +25,19 @@ app.get('/', (req, res) => {
 app.get('/index', (req, res) => {
     res.sendFile(__dirname+'/public/html/index.html');
 });
-<<<<<<< Updated upstream
-=======
 app.get('/register', (req, res) => {
     res.sendFile(__dirname+'/public/html/register.html');
 });
 app.get('/simu', (req, res) => {
     res.sendFile(__dirname+'/public/html/simu.html');
 });
-app.get('/login', (req, res) => {
-    res.sendFile(__dirname+'/public/html/login.html');
-});
 
-app.get('/annonces', (req, res) => {
-    res.sendFile(__dirname+'/public/html/annonces.html');
-});
 
 // MySQL Connection
 const connection = mysql.createConnection({
-    host: 'root@77.68.80.193',
-    user: 'root2', // your mysql username
-    password: 'Mathis1!', // your mysql password
+    host: 'localhost',
+    user: 'root', // your mysql username
+    password: '{Al37_Be36', // your mysql password
     database: 'solution_factory' // your database name
 });
 connection.connect(error => {
@@ -136,8 +127,7 @@ app.post('/login', (req, res) => {
                 } else {
                     // Password matches, generate a JWT
                     const payload = { id: user.id, email: user.email, type_utilisateur: user.type_utilisateur };
-                    const secretKey = '1234'; // Changez ça par une clé secrète complexe
-                    const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+                    const token = jwt.sign(payload, 'abcd', { expiresIn: '1h' });
 
                     res.status(200).send({ token });
                 }
@@ -147,34 +137,85 @@ app.post('/login', (req, res) => {
 });
 
 
+const fs = require('fs');
+const path = require('path');
 
 
+const uploadDirectory = path.join(__dirname, 'upload');
 
+app.post('/upload', upload.array('file'), (req, res) => {
+    async function uploadFile(file, index) {
+        const newFilename = `fichier${index + 1}-23`;
+        const filePath = path.join(uploadDirectory, newFilename);
 
->>>>>>> Stashed changes
+        await fs.promises.rename(file.path, filePath); 
 
-
-
-
-
-app.post('/upload', upload.single('file'), (req, res) => {
-    async function uploadFile() {
-        await storage.bucket(bucketName).upload(req.file.path, {
+        await storage.bucket(bucketName).upload(filePath, {
             gzip: true,
             metadata: {
                 cacheControl: 'no-cache',
             },
         });
 
-        console.log(`${req.file.originalname} uploaded to ${bucketName}.`);
+        console.log(`${newFilename} uploaded to ${bucketName}.`);
     }
 
-    uploadFile().catch(console.error);
+    if (req.files) {
+        for (const [index, file] of req.files.entries()) {
+            uploadFile(file, index).catch(console.error);
+        }
+    }
 
     res.send({
         status: 'ok'
     });
 });
+
+
+app.get('/download/:fileId', async (req, res) => {
+    const fileId = req.params.fileId;
+    console.log('File ID:', fileId); 
+
+    const tmpDir = os.tmpdir();
+    console.log('Temp directory:', tmpDir); 
+
+    console.log('Temp directory:', tmpDir);
+    console.log('File ID:', fileId);
+    
+    const filePath = path.join(tmpDir, fileId);
+    console.log('File path:', filePath);
+    
+    const destination = filePath;  
+    const options = {
+        destination: destination,
+    };
+    
+    try {
+        await storage.bucket(bucketName).file(fileId).download(options);
+        console.log(`File ${fileId} downloaded to ${destination}`);
+        console.log('Check if file exists:', fs.existsSync(destination));
+    } catch (error) {
+        console.error(`Error downloading file ${fileId}:`, error);
+        res.status(500).send('Error downloading file');
+        return;
+    }
+    
+    console.log(`Sending file ${fileId} to client...`);
+    console.log('Path to send file:', destination);
+    
+    try {
+        res.download(destination);
+        console.log(`File ${fileId} sent to client`);
+    } catch (error) {
+        console.error(`Error sending file ${fileId} to client:`, error);
+        res.status(500).send('Error sending file to client');
+    }
+    
+});
+
+
+
+
 
 app.listen(3000, () => {
     console.log('Server started on port 3000');
