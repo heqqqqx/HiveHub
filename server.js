@@ -38,7 +38,7 @@ app.get('/simu', (req, res) => {
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root', // your mysql username
-    password: '{Al37_Be36', // your mysql password
+    password: '1234', // your mysql password
     database: 'solution_factory' // your database name
 });
 connection.connect(error => {
