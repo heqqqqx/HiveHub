@@ -20,17 +20,17 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname+'/public/html/drag&slid.html');
+    res.sendFile(__dirname + '/public/html/createAnnonce.html');
 });
 
 app.get('/index', (req, res) => {
-    res.sendFile(__dirname+'/public/html/index.html');
+    res.sendFile(__dirname + '/public/html/index.html');
 });
 app.get('/register', (req, res) => {
-    res.sendFile(__dirname+'/public/html/register.html');
+    res.sendFile(__dirname + '/public/html/register.html');
 });
 app.get('/simu', (req, res) => {
-    res.sendFile(__dirname+'/public/html/simu.html');
+    res.sendFile(__dirname + '/public/html/simu.html');
 });
 
 
@@ -54,20 +54,20 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 app.use(session({
-    secret: 'SeCrEtCoDe37_Be36{',  
+    secret: 'SeCrEtCoDe37_Be36{',
     resave: false,
     saveUninitialized: false,
-    cookie: { 
-      secure: false,  
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 60
+    cookie: {
+        secure: false,
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 60
     }
-  }));
+}));
 
 
-  
 
-  app.post('/create-account', (req, res) => {
+
+app.post('/create-account', (req, res) => {
     let { nom, prenom, date_naissance, adresse, email, mot_de_passe, type_utilisateur } = req.body;
     const date_inscription = new Date();
 
@@ -104,7 +104,7 @@ app.use(session({
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
                     connection.query(sql, [nom, prenom, date_naissance, adresse, email, mot_de_passe, type_utilisateur, date_inscription], (error, results) => {
-                        if(error) {
+                        if (error) {
                             console.error(error);
                             res.status(500).send({ message: 'Server Error' });
                         } else {
@@ -120,7 +120,7 @@ app.use(session({
     });
 });
 
-  
+
 
 app.post('/login', (req, res) => {
     const { email, mot_de_passe } = req.body;
@@ -141,7 +141,7 @@ app.post('/login', (req, res) => {
                 } else if (!result) {
                     res.status(401).send({ message: 'Invalid email or password.' });
                 } else {
-                    
+
                     const payload = { id: user.id, email: user.email, type_utilisateur: user.type_utilisateur };
                     const token = jwt.sign(payload, 'abcd', { expiresIn: '1h' });
 
@@ -203,7 +203,7 @@ app.post('/upload', upload.array('file'), (req, res) => {
         const newFilename = `fichier${index + 1}-23`;
         const filePath = path.join(uploadDirectory, newFilename);
 
-        await fs.promises.rename(file.path, filePath); 
+        await fs.promises.rename(file.path, filePath);
 
         await storage.bucket(bucketName).upload(filePath, {
             gzip: true,
@@ -229,22 +229,22 @@ app.post('/upload', upload.array('file'), (req, res) => {
 
 app.get('/download/:fileId', async (req, res) => {
     const fileId = req.params.fileId;
-    console.log('File ID:', fileId); 
+    console.log('File ID:', fileId);
 
     const tmpDir = os.tmpdir();
-    console.log('Temp directory:', tmpDir); 
+    console.log('Temp directory:', tmpDir);
 
     console.log('Temp directory:', tmpDir);
     console.log('File ID:', fileId);
-    
+
     const filePath = path.join(tmpDir, fileId);
     console.log('File path:', filePath);
-    
-    const destination = filePath;  
+
+    const destination = filePath;
     const options = {
         destination: destination,
     };
-    
+
     try {
         await storage.bucket(bucketName).file(fileId).download(options);
         console.log(`File ${fileId} downloaded to ${destination}`);
@@ -254,10 +254,10 @@ app.get('/download/:fileId', async (req, res) => {
         res.status(500).send('Error downloading file');
         return;
     }
-    
+
     console.log(`Sending file ${fileId} to client...`);
     console.log('Path to send file:', destination);
-    
+
     try {
         res.download(destination);
         console.log(`File ${fileId} sent to client`);
@@ -265,11 +265,11 @@ app.get('/download/:fileId', async (req, res) => {
         console.error(`Error sending file ${fileId} to client:`, error);
         res.status(500).send('Error sending file to client');
     }
-    
+
 });
 
-let id=30;
-let id_dosier=0;
+let id = 30;
+let id_dosier = 0;
 app.post('/create-annonce', (req, res) => {
     let { name, state, city, zipCode, address, prix, date, surface, description } = req.body;
     id++;
@@ -277,7 +277,7 @@ app.post('/create-annonce', (req, res) => {
     date = new Date().toISOString().slice(0, 10);
     let query = `INSERT INTO Annonces (id_annonce, titre_annonce, prix_bien, surface, descriptions, date_annonce, zip_code, city, state, address) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    connection.query(query,[id,name,prix,surface,description,date,zipCode,city,state,address] , (error, results) => {
+    connection.query(query, [id, name, prix, surface, description, date, zipCode, city, state, address], (error, results) => {
         if (error) {
             console.error(error);
             res.status(500).send({ message: 'Server Error' });
