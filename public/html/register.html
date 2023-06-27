@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Formulaire d'inscription</title>
+    <link rel="stylesheet" href="../css/navbar.css">
+
+    <link rel="stylesheet" href="../css/register.css">
+</head>
+
+
+<body>
+    <div id="navbarre-placeholder"></div>
+  <script>
+    // Charger la barre de navigation
+    fetch('/html/navbar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('navbarre-placeholder').innerHTML = data;
+      });
+  </script>
+    <div class="form-container">
+        <div class="container">
+            <form>
+                <div class="form-group input-fields">
+                    <div class="row">
+                        <input type="text" placeholder="Nom">
+                        <input type="text" placeholder="Prénom">
+                    </div>
+                    <div class="row">
+                        <input id="birthdate" type="date" placeholder="Date de naissance">
+                        <input id="ville" placeholder="Lieu de naissance">
+                    </div>
+                    <input id="email" type="email" placeholder="Email">
+                    <input id="password" type="password" placeholder="Mot de passe">
+                    <input id="confirm-pwd" type="password" placeholder="Confirmer le mot de passe">
+                </div>
+                <div class="form-group submit-button">
+                    <button type="submit">S'inscrire</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="../js/register.js"></script>
+</body>
+
+</html>
