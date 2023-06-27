@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const multer = require('multer');
 const upload = multer({ dest: 'upload/' });
 const { Storage } = require('@google-cloud/storage');
@@ -6,6 +7,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const os = require('os');
+
 
 // Crée un client
 const storage = new Storage({ keyFilename: "helpful-pixel-389707-0ca50844ca16.json" });
@@ -52,7 +54,21 @@ connection.connect(error => {
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-app.post('/create-account', (req, res) => {
+app.use(session({
+    secret: 'SeCrEtCoDe37_Be36{',  
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+      secure: false,  
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 60
+    }
+  }));
+
+
+  
+
+  app.post('/create-account', (req, res) => {
     let { nom, prenom, date_naissance, adresse, email, mot_de_passe, type_utilisateur } = req.body;
     const date_inscription = new Date();
 
@@ -93,6 +109,9 @@ app.post('/create-account', (req, res) => {
                             console.error(error);
                             res.status(500).send({ message: 'Server Error' });
                         } else {
+                            // Stocker l'ID utilisateur dans la session
+                            req.session.userId = results.insertId;
+
                             res.status(200).send({ id: results.insertId, message: 'Account created successfully' });
                         }
                     });
@@ -102,30 +121,28 @@ app.post('/create-account', (req, res) => {
     });
 });
 
+  
+
 app.post('/login', (req, res) => {
     const { email, mot_de_passe } = req.body;
 
-    // Check if the user exists
     const sql = 'SELECT * FROM Utilisateurs WHERE email = ?';
     connection.query(sql, [email], (error, results) => {
         if (error) {
             console.error(error);
             res.status(500).send({ message: 'Server Error' });
         } else if (results.length === 0) {
-            // User does not exist
             res.status(401).send({ message: 'Invalid email or password.' });
         } else {
-            // User exists, check the password
             const user = results[0];
             bcrypt.compare(mot_de_passe, user.mot_de_passe, (err, result) => {
                 if (err) {
                     console.error(err);
                     res.status(500).send({ message: 'Server Error' });
                 } else if (!result) {
-                    // Password does not match
                     res.status(401).send({ message: 'Invalid email or password.' });
                 } else {
-                    // Password matches, generate a JWT
+                    
                     const payload = { id: user.id, email: user.email, type_utilisateur: user.type_utilisateur };
                     const token = jwt.sign(payload, 'abcd', { expiresIn: '1h' });
 
@@ -135,6 +152,45 @@ app.post('/login', (req, res) => {
         }
     });
 });
+
+
+app.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send({ message: 'Server Error' });
+        } else {
+            res.status(200).send({ message: 'Logout successful' });
+        }
+    });
+});
+
+
+app.get('/session', (req, res) => {
+    const userId = req.session.userId;
+
+    if (!userId) {
+        res.status(200).send({});
+        return;
+    }
+
+    const sql = 'SELECT * FROM Utilisateurs WHERE id_utilisateur = ?';
+    connection.query(sql, [userId], (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server Error' });
+        } else if (results.length === 0) {
+            res.status(200).send({});
+        } else {
+            const user = results[0];
+            const { id_utilisateur, nom, prenom, email, type_utilisateur } = user;
+            res.status(200).send({ id_utilisateur, nom, prenom, email, type_utilisateur });
+        }
+    });
+});
+
+
+
 
 
 const fs = require('fs');
