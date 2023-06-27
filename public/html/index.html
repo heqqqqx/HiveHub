@@ -7,22 +7,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link type="text/css" rel="stylesheet" href="../css/index.css">
     <link type="text/css" rel="stylesheet" href="../css/navbar.css">
-
     <title>HiveHub</title>
 </head>
-<div id="navbarre-placeholder"></div>
-  <script>
-    // Charger la barre de navigation
-    fetch('/html/navbar.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('navbarre-placeholder').innerHTML = data;
-      });
-  </script>
-
 
 <body>
-
+    <div id="navbar">
+        <div id="logo">
+            <a href="index.html">
+                <img src="../image/icon/hiveHub.png" alt="Logo de hiveHub" class="logo" />
+            </a>
+        </div>
+        <div id="nav-items">
+            <ul>
+                <li><a href="index.php">Qui sommes-nous ?</a></li>
+                <li><a class="vertical_bar">|</a></li>
+                <li><a href="login.php">Emprunter</a></li>
+                <li><a class="vertical_bar">|</a></li>
+                <li id="client-space">
+                    <a href="../html/register.html">
+                        <img src="../image/icon/cadenas.png" alt="Cadenas" class="cadenas-icon" />
+                        Espace client
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script src="../js/navbar.js"></script>
     <div id="main" class="main">
         <div id="main-content" class="main-content">
             <div id="main-text" class="main-text">
@@ -153,6 +163,8 @@
 
     </div>
     <footer> </footer>
+
 </body>
+
 
 </html>
