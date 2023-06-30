@@ -1,6 +1,4 @@
-body {
-    background:#1e2126;
-}
+
 
 .annonces-main-content {
     column-gap: 24px;
@@ -41,6 +39,7 @@ ul {
     border: 1px solid #ff914d;
     border-radius: 4px;
     padding:10px;
+    margin-bottom: 10px;
    
 }
 .annonces-main-content .annonces-rightPanel .rightDisplay {
@@ -88,4 +87,9 @@ ul {
   
   .hidden {
     display: none;
+}
+
+.title {
+    margin-top: 1%;
+    margin-bottom: 1%;
 }

@@ -26,8 +26,6 @@ fetch('http://localhost:3000/getdata')
                                     </div>
                                     <div class="infosGenerales">
                                         <div class="date_annonce">${formattedDate}</div>
-                                        <div class="zipCode">${annonce.zip_code}</div>
-                                        <div class="city">${annonce.city}</div>
                                         <div class="state">${annonce.state}</div>
                                     </div>
                                     <button class="view-more" data-index="${index}">Voir plus</button>
@@ -62,9 +60,10 @@ fetch('http://localhost:3000/getdata')
                             <span class="attribut_label"><h3>Descriptions:</h3></span>
                             <span class="descriptions">${annonce.descriptions}</span>
                         </div>
+                        
                         <div class="attribut">
-                            <span class="attribut_label"><h3>Address:</h3></span>
-                            <span class="address">${annonce.address}</span>
+                            <span class="attribut_label"><h3>Addresse:</h3></span>
+                            <span class="address">${annonce.address}, ${annonce.zip_code}, ${annonce.city}</span>
                         </div>
                     `;
 

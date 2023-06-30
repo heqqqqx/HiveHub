@@ -29,6 +29,9 @@ app.get('/index', (req, res) => {
 app.get('/register', (req, res) => {
     res.sendFile(__dirname + '/public/html/register.html');
 });
+app.get('/login', (req, res) => {
+    res.sendFile(__dirname + '/public/html/login.html');
+});
 app.get('/simu', (req, res) => {
     res.sendFile(__dirname + '/public/html/simu.html');
 });
@@ -122,6 +125,35 @@ app.post('/create-account', (req, res) => {
     });
 });
 
+app.post('/login', (req, res) => {
+    let { email, mot_de_passe } = req.body;
+
+    // Vérifier si l'utilisateur existe
+    const sql = 'SELECT * FROM Utilisateurs WHERE email = ?';
+    connection.query(sql, [email], (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server Error' });
+        } else if (results.length === 0) {
+            res.status(401).send({ message: 'Invalid email or password.' });
+        } else {
+            // Vérifier le mot de passe
+            bcrypt.compare(mot_de_passe, results[0].mot_de_passe, (err, result) => {
+                if (err) {
+                    console.error(err);
+                    res.status(500).send({ message: 'Server Error' });
+                } else if (!result) {
+                    res.status(401).send({ message: 'Invalid email or password.' });
+                } else {
+                    // Stocker l'ID utilisateur dans la session
+                    req.session.userId = results[0].id;
+
+                    res.status(200).send({ id: results[0].id, message: 'Logged in successfully' });
+                }
+            });
+        }
+    });
+});
 
 
 app.get('/getdata', (req, res) => {
