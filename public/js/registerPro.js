@@ -1,22 +1,22 @@
-document.getElementById('registerForm').addEventListener('submit', function(event) {
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('register-form').addEventListener('submit', function(event) {
     event.preventDefault();
     
     const nom = document.getElementById('nom').value;
     const prenom = document.getElementById('prenom').value;
-    const date_naissance = document.getElementById('dateNaissance').value;
-    const token = document.getElementById('token').value; // Retrieve the token value correctly
-    console.log("test");
-    console.log("the token is"+token);
-    const adresse = document.getElementById('adresse').value;
+    const token = document.getElementById('token').value;
+    const adresse = document.getElementById('ville').value;
     const email = document.getElementById('email').value;
     const mot_de_passe = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-  
+    const confirmPassword = document.getElementById('confirm-pwd').value;
+    const date_naissance = document.getElementById('dateNaissance').value;
+    
+
     if (mot_de_passe !== confirmPassword) {
       alert('Les mots de passe ne correspondent pas.');
       return;
     }
-  
+
     fetch('/create-accountPro', {
       method: 'POST',
       headers: {
@@ -26,7 +26,7 @@ document.getElementById('registerForm').addEventListener('submit', function(even
         nom,
         prenom,
         date_naissance,
-        token, // Pass the token value in the request body
+        token,
         adresse,
         email,
         mot_de_passe
@@ -46,4 +46,4 @@ document.getElementById('registerForm').addEventListener('submit', function(even
       alert('Une erreur s\'est produite lors de la création du compte.');
     });
   });
-  
+});

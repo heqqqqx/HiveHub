@@ -1,48 +1,44 @@
 <!DOCTYPE html>
-  <html>
-  <head>
-    <title>Inscription</title>
-    
-  </head>
-  <body>
-    <h1>Inscription</h1>
-    <form id="registerForm">
-      <div>
-        <label for="nom">Nom:</label>
-        <input type="text" id="nom" required>
-      </div>
-      <div>
-        <label for="prenom">Prénom:</label>
-        <input type="text" id="prenom" required>
-      </div>
-      <div>
-        <label for="dateNaissance">Date de naissance:</label>
-        <input type="date" id="dateNaissance" required>
-      </div>
-      <div>
-        <label for="token">Token:</label>
-        <input type="text" id="token" name="token" required><br></div>
-      <div>
-        <label for="adresse">Adresse:</label>
-        <input type="text" id="adresse" required>
-      </div>
-      <div>
-        <label for="email">E-mail:</label>
-        <input type="email" id="email" required>
-      </div>
-      <div>
-        <label for="password">Mot de passe:</label>
-        <input type="password" id="password" required>
-      </div>
-      <div>
-        <label for="confirmPassword">Confirmer le mot de passe:</label>
-        <input type="password" id="confirmPassword" required>
-      </div>
-      <div>
-        <button type="submit">Créer un compte</button>
-      </div>
-    </form>
-    <script src="../js/registerPro.js"></script>
-  </body>
-  </html>
-  
+<html>
+<head>
+  <title>Inscription Professionnels</title>
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/register.css">
+</head>
+<body>
+  <div id="navbarre-placeholder"></div>
+  <script>
+    // Charger la barre de navigation
+    fetch('/html/navbar.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('navbarre-placeholder').innerHTML = data;
+    });
+  </script>
+  <div class="form-container">
+    <div class="container">
+      <form id="register-form">
+        <div class="form-group input-fields">
+          <div class="row">
+            <input type="text" id="nom" name="nom" placeholder="Nom" required>
+            <input type="text" id="prenom" name="prenom" placeholder="Prénom" required>
+          </div>
+          <div class="row">
+            <input type="date" id="dateNaissance" name="datenaissance" placeholder="Date de Naissance" required>
+            <input type="text" id="ville" name="adresse" placeholder="Lieu de naissance" required>
+          </div>
+          <input id="email" type="email" name="email" placeholder="Email" required>
+          <input id="password" type="password" name="mot_de_passe" placeholder="Mot de passe" required>
+          <input id="confirm-pwd" type="password" placeholder="Confirmer le mot de passe" required>
+          <input id="token" type="text" name="token" placeholder="Token" required>
+        </div>
+        <div class="form-group submit-button">
+          <button type="submit">S'inscrire</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/registerPro.js"></script>
+</body>
+</html>
