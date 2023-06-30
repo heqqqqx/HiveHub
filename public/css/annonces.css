@@ -1,15 +1,22 @@
+
+
 .annonces-main-content {
     column-gap: 24px;
     display: flex;
-    justify-content: center;
     padding: 16px 24px 0;
     width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    
 }
 
 .annonces-leftPanel {
+    flex:1;
     max-width: 648px;
     padding: 0 0 9px!important;
     width: 410px;
+    max-height: 410px;
+    float: left;
 }
 ul {
     display: block;
@@ -32,19 +39,10 @@ ul {
     border: 1px solid #ff914d;
     border-radius: 4px;
     padding:10px;
+    margin-bottom: 10px;
    
 }
-.annonces-main-content .annonces-rightPanel {
-    width: 100%;
-    max-width: 648px;
-    padding: 0 0 9px!important;
-    margin-left: 24px;
-}
-.annonces-main-content .annonces-rightPanel .annonces-ViewAnnoncePaneWrapper {
-    padding: 0 24px;
-}
-
-.css-n0exdb {
+.annonces-main-content .annonces-rightPanel .rightDisplay {
     border: 0.0625rem solid #d4d2d0;
     border-radius: 0.5rem;
     box-sizing: border-box;
@@ -52,33 +50,46 @@ ul {
     min-width: 0;
     overflow: hidden;
     text-align: initial;
-    padding:10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
 }
 
-.css-t8wchy {
-    box-sizing: border-box;
-    background: none rgb(37, 87, 167);
-    appearance: none;
-    text-align: left;
-    text-decoration: none;
-    border: 1px solid rgb(37, 87, 167);
-    cursor: pointer;
-    user-select: none;
-    -webkit-box-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    justify-content: center;
-    position: relative;
-    margin: 0px;
-    padding: 0.5625rem 1rem;
-    line-height: 1.5;
-    font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, "Liberation Sans", Roboto, Noto, sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
+.annonces-main-content .annonces-rightPanel .rightDisplay span {
+    margin-bottom: 5px;
+}
+
+
+.rightDisplay {
+    flex: 1;
+    border: 0.0625rem solid #d4d2d0;
     border-radius: 0.5rem;
-    transition: border-color 200ms cubic-bezier(0.645, 0.045, 0.355, 1) 0s, background-color 200ms cubic-bezier(0.645, 0.045, 0.355, 1) 0s, opacity 200ms cubic-bezier(0.645, 0.045, 0.355, 1) 0s, box-shadow 200ms cubic-bezier(0.645, 0.045, 0.355, 1) 0s, color 200ms cubic-bezier(0.645, 0.045, 0.355, 1) 0s;
+    box-sizing: border-box;
+    margin: 0;
+    min-width: 0;
+    overflow: hidden;
+    text-align: initial;
+    padding: 10px;
     display: flex;
-    width: 100%;
-    color: rgb(255, 255, 255);
-    box-shadow: none;
+    flex-direction: column;
+    width: 410px;
+    justify-content: center;
+
+    min-height: 175px;
+  }
+  .attributs_demande {
+    display: flex;
+    flex-direction: column;
+  }
+  .rightDisplay span {
+    margin-bottom: 5px;
+  }
+  
+  .hidden {
+    display: none;
+}
+
+.title {
+    margin-top: 1%;
+    margin-bottom: 1%;
 }

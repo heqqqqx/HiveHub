@@ -1,41 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../css/createAnnonce.css">
 </head>
+
 <body>
     <form action="">
-        <h1>Fill in the form to create an annonce</h1>
+        <h1>Remplir ce form pour créer une annonce.</h1>
 
-        <label for="" require>Name of the annonce</label>
+        <label for="" require>Titre de l'annonce </label>
         <input type="text" id="title" required>
 
-        <label for="" require>State</label>
-        <input type="text" id="state" required>
+        <label for="state" require>Region</label>
+        <select id="state" required>
+            <option value="">--Please choose a region--</option>
+            <option value="Auvergne-Rhône-Alpes">Auvergne-Rhône-Alpes</option>
+            <option value="Bourgogne-Franche-Comté">Bourgogne-Franche-Comté</option>
+            <option value="Bretagne">Bretagne</option>
+            <option value="Centre-Val de Loire">Centre-Val de Loire</option>
+            <option value="Corse">Corse</option>
+            <option value="Grand Est">Grand Est</option>
+            <option value="Hauts-de-France">Hauts-de-France</option>
+            <option value="Île-de-France">Île-de-France</option>
+            <option value="Normandie">Normandie</option>
+            <option value="Nouvelle-Aquitaine">Nouvelle-Aquitaine</option>
+            <option value="Occitanie">Occitanie</option>
+            <option value="Pays de la Loire">Pays de la Loire</option>
+            <option value="Provence-Alpes-Côte d'Azur">Provence-Alpes-Côte d'Azur</option>
+            <option value="Guadeloupe">Guadeloupe</option>
+            <option value="Martinique">Martinique</option>
+            <option value="Guyane">Guyane</option>
+            <option value="La Réunion">La Réunion</option>
+            <option value="Mayotte">Mayotte</option>
+        </select>
 
-        <label for="">City</label>
+
+        <label for="">Ville</label>
         <input type="text" id="city" required>
 
-        <label for="">Zip Code</label>
+        <label for="">Code postal</label>
         <input type="text" id="zipCode" required>
 
-        <label for="">Address</label>
+        <label for="">Addresse</label>
         <input type="text" id="address" required>
 
-        <label for="" require>Price</label>
+        <label for="" require>Prix en euros (€)</label>
         <input type="text" id="price" required>
 
         <label for="">Surface</label>
         <input type="text" id="surface" required>
 
-        <label for="" require>Describe the ad</label>
+        <label for="" require>Description</label>
         <input type="text" id="description" required>
 
         <button type="button" onclick="addAnnonce()">Next</button>
     </form>
     <script src="../js/createAnnonce.js"></script>
 </body>
+
 </html>

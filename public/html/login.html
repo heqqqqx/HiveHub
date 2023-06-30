@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Se connecter</title>
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+
+<body>
+    <div id="navbar">
+        <div id="logo">
+            <a href="index.html">
+                <img src="../image/icon/hiveHub.png" alt="Logo de hiveHub" class="logo" />
+            </a>
+        </div>
+        <div id="nav-items">
+            <ul>
+                <li><a href="/index">Qui sommes-nous ?</a></li>
+                <li><a class="vertical_bar">|</a></li>
+                <li><a href="/">Emprunter</a></li>
+                <li><a class="vertical_bar">|</a></li>
+                <li id="client-space">
+                    <a href="/register">
+                        <img src="../image/icon/cadenas.png" alt="Cadenas" class="cadenas-icon" />
+                        Espace client
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="login-form">
+        <h2>Se connecter</h2>
+        <form>
+            <label for="email">Email :</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="mot_de_passe">Mot de passe :</label>
+            <input type="password" id="mot_de_passe" name="mot_de_passe" required>
+
+            <input type="submit" value="Se connecter">
+        </form>
+    </div>
+    
+    <script src="../js/login.js"></script>
+</body>
+
+</html>

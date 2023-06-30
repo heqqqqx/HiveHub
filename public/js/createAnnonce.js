@@ -9,7 +9,7 @@ function addAnnonce() {
     var description = document.getElementById("description").value;
 
     var date=null;
-
+    console.log(state)
     fetch('/create-annonce', {
         method: 'POST',
         headers: {

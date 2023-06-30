@@ -35,9 +35,14 @@ app.get('/index', (req, res) => {
 app.get('/register', (req, res) => {
     res.sendFile(__dirname + '/public/html/register.html');
 });
+app.get('/login', (req, res) => {
+    res.sendFile(__dirname + '/public/html/login.html');
+});
 app.get('/simu', (req, res) => {
     res.sendFile(__dirname + '/public/html/simu.html');
 });
+app.get('/annonces', (req, res) => {
+    res.sendFile(__dirname + '/public/html/displayAnnonces.html');
 app.get('/getTokenPro', (req, res) => {
     res.sendFile(__dirname+'/public/html/getTokenPro.html');
 });
@@ -48,6 +53,7 @@ app.get('/registerPro', (req, res) => {
 // MySQL Connection
 const connection = mysql.createConnection({
     host: 'localhost',
+
     user: 'root', 
     password: 'root', 
     database: 'solution_factory' 
@@ -155,8 +161,45 @@ app.post('/create-account', (req, res) => {
     });
 });
 
+app.post('/login', (req, res) => {
+    let { email, mot_de_passe } = req.body;
+
+    // Vérifier si l'utilisateur existe
+    const sql = 'SELECT * FROM Utilisateurs WHERE email = ?';
+    connection.query(sql, [email], (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server Error' });
+        } else if (results.length === 0) {
+            res.status(401).send({ message: 'Invalid email or password.' });
+        } else {
+            // Vérifier le mot de passe
+            bcrypt.compare(mot_de_passe, results[0].mot_de_passe, (err, result) => {
+                if (err) {
+                    console.error(err);
+                    res.status(500).send({ message: 'Server Error' });
+                } else if (!result) {
+                    res.status(401).send({ message: 'Invalid email or password.' });
+                } else {
+                    // Stocker l'ID utilisateur dans la session
+                    req.session.userId = results[0].id;
+
+                    res.status(200).send({ id: results[0].id, message: 'Logged in successfully' });
+                }
+            });
+        }
+    });
+});
 
 
+app.get('/getdata', (req, res) => {
+    let sql = 'SELECT * FROM annonces';
+    connection.query(sql, (err, results) => {
+        if(err) throw err;
+        console.log(results);
+        res.send(results);
+    });
+});
 app.post('/login', (req, res) => {
     const { email, mot_de_passe } = req.body;
 
@@ -342,7 +385,6 @@ app.get('/session', (req, res) => {
         }
     });
 });
-
 
 
 

@@ -3,27 +3,12 @@ const form = document.querySelector('form');
 form.addEventListener('submit', (e) => {
     e.preventDefault();
 
-
-        // vérification des mots de passe
-        const password = form.elements['mot_de_passe'].value;
-        const confirmPassword = document.getElementById('confirm-pwd').value;
-    
-        if (password !== confirmPassword) {
-            alert('Les mots de passe ne correspondent pas.');
-            return;  // Terminez tôt pour ne pas envoyer la requête fetch
-        }
-
     const formData = {
-        nom: form.elements[0].value,
-        prenom: form.elements[1].value,
-        date_naissance: form.elements[2].value,
-        adresse: form.elements[3].value,
-        email: form.elements[4].value,
-        mot_de_passe: form.elements[5].value,
-        type_utilisateur: 'particulier', 
+        email: form.elements['email'].value,
+        mot_de_passe: form.elements['mot_de_passe'].value,
     };
 
-    fetch('/create-account', {
+    fetch('/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -35,12 +20,10 @@ form.addEventListener('submit', (e) => {
         console.log('Response headers:', response.headers);  
         return response.text().then(text => {
             try {
-
                 const data = JSON.parse(text);
                 console.log('Parsed response data:', data);  
                 return { status: response.status, body: data };
             } catch (error) {
-                
                 console.log('Raw response text:', text);  
                 throw error;
             }
@@ -49,10 +32,10 @@ form.addEventListener('submit', (e) => {
     .then(data => {
         console.log('In second .then:', data);  
     
-        if (data.status === 409) {
+        if (data.status === 401) {
             showPopup(data.body.message, 'error');
-        } else if (data.status === 200 && data.body.message === 'Account created successfully') {
-            showPopup('Account created successfully', 'success');
+        } else if (data.status === 200 && data.body.message === 'Logged in successfully') {
+            showPopup('Logged in successfully', 'success');
             setTimeout(() => {
                 console.log('Redirecting to index.html');  
                 window.location.href = '/index';
@@ -86,7 +69,7 @@ form.addEventListener('submit', (e) => {
         setTimeout(() => {
             console.log('Removing popup');  
             popup.remove();
-        }, 1000);
+        }, 3000);
     }
     
 })
