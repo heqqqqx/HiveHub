@@ -9,43 +9,57 @@ function addAnnonce() {
     var description = document.getElementById("description").value;
 
     var date = null;
-    var id = null;
-    //fetch to get the id of the user thnaks to the cookie
+
     fetch('/session', {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
+        credentials: 'include'
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
-            if (data.message) {
-                alert(data.message);
-            } else {
+            if (data.id_utilisateur) {
                 console.log(data);
-                id = data.id_utilisateur;
+                console.log("data.idutilisateur : " + data.id_utilisateur);
+                alert("connect first " + data.id_utilisateur);
+                var id_utilisateur = data.id_utilisateur;
+
+
+
+                fetch('/create-annonce', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, id_utilisateur, state, city, zipCode, address, prix, date, surface, description })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data.message) {
+                            alert(data.message);
+                        } else {
+                            alert('Annonce created successfully!');
+                            // console.log(data);
+
+                        }
+                    });
+                window.location.href = '/index';
+
+
+
+
+
+            } else {
+                console.log(data.id_utilisateur);
+                alert("id utilisateur : " + data.id_utilisateur);
             }
+            alert(data.id_utilisateur);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
         });
 
 
 
-    fetch('/create-annonce', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({id, name, state, city, zipCode, address, prix, date, surface, description })
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            if (data.message) {
-                alert(data.message);
-            } else {
-                alert('Annonce created successfully!');
-                console.log(data);
-                // window.location.href = '/index';
-            }
-        });
+
+
 }
