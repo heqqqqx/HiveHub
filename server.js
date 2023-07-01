@@ -191,7 +191,20 @@ app.post('/login', (req, res) => {
     });
 });
 
-
+app.patch('/update-account', (req, res) => {
+    const userId = req.session.userId;
+    //user can only change his email and password
+    const { email, mot_de_passe } = req.body;
+    // Update the email and password in the database
+    const sql = 'UPDATE Utilisateurs SET email = ?, mot_de_passe = ? WHERE id = ?';
+    connection.query(sql, [email, mot_de_passe, userId], (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server Error' });
+        } else {
+            res.status(200).send({ message: 'Address updated successfully' });
+        }
+    })});
 app.get('/getdata', (req, res) => {
     let sql = 'SELECT * FROM annonces';
     connection.query(sql, (err, results) => {
@@ -386,8 +399,10 @@ app.get('/session', (req, res) => {
     });
 });
 
-
-
+app.get('/dashboard', (req, res) => {
+    const userId = req.session.userId;
+    res.sendFile(__dirname + '/public/html/dashboard.html');
+});
 
 const fs = require('fs');
 const path = require('path');
