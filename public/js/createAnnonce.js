@@ -19,10 +19,7 @@ function addAnnonce() {
             if (data.id_utilisateur) {
                 console.log(data);
                 console.log("data.idutilisateur : " + data.id_utilisateur);
-                alert("connect first " + data.id_utilisateur);
                 var id_utilisateur = data.id_utilisateur;
-
-
 
                 fetch('/create-annonce', {
                     method: 'POST',
@@ -38,26 +35,18 @@ function addAnnonce() {
                             alert(data.message);
                         } else {
                             alert('Annonce created successfully!');
-                            // console.log(data);
-
                         }
                     });
-                window.location.href = '/index';
-
-
-
+                // window.location.href = '/index';
 
 
             } else {
-                console.log(data.id_utilisateur);
-                alert("id utilisateur : " + data.id_utilisateur);
+                alert("didnt worked : " + data.id_utilisateur);
             }
-            alert(data.id_utilisateur);
         })
         .catch((error) => {
             console.error('Error:', error);
         });
-
 
 
 

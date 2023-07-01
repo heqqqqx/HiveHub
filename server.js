@@ -493,16 +493,33 @@ app.post('/create-annonce', (req, res) => {
     date = new Date().toISOString().slice(0, 10);
     let query = `INSERT INTO Annonces ( titre_annonce, prix_bien, surface, descriptions, date_annonce, zip_code, city, state, address,id_utilisateur) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    connection.query(query, [ name, prix, surface, description, date, zipCode, city, state, address,id_utilisateur], (error, results) => {
+    connection.query(query, [name, prix, surface, description, date, zipCode, city, state, address, id_utilisateur], (error, results) => {
         if (error) {
             console.error(error);
-            res.status(500).send({ message: 'Server Error' });
+            res.status(500).send({ message: "error creating your account, you may have already created an account" });
         } else {
             res.status(200).send({ id: results.insertId, message: 'Annonce created successfully' });
         }
     });
 });
 
+
+// app.get('/check_annonces', (req, res) => {
+//     const userId = req.session.userId;
+//     const sql = 'SELECT * FROM Annonces WHERE id_utilisateur = ?';
+//     connection.query(sql, [userId], (error, results) => {
+//         if (error) {
+//             console.error(error);
+//             res.status(500).send({ message: 'User alreadycreated an annonce' });
+//         } else if (results.length === 0) {
+//             res.status(200).send({});
+//         } else {
+//             const user = results[0];
+//             const { id_utilisateur, titre_annonce, prix_bien, surface, descriptions, date_annonce, zip_code, city, state, address } = user;
+//             res.status(200).send({ id_utilisateur, titre_annonce, prix_bien, surface, descriptions, date_annonce, zip_code, city, state, address });
+//         }
+//     });
+// });
 
 
 app.listen(3000, () => {
