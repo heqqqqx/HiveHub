@@ -26,6 +26,9 @@ app.use(express.static('public'));
 
 //app.get
 app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/html/index.html');
+});
+app.get('/createAnnonce', (req, res) => {
     res.sendFile(__dirname + '/public/html/createAnnonce.html');
 });
 
@@ -480,11 +483,10 @@ app.get('/download/:fileId', async (req, res) => {
 
 });
 
-let id = 30;
+
 let id_dosier = 0;
 app.post('/create-annonce', (req, res) => {
-    let { name, state, city, zipCode, address, prix, date, surface, description } = req.body;
-    id++;
+    let {id, name, state, city, zipCode, address, prix, date, surface, description } = req.body;
     id_dosier++;
     date = new Date().toISOString().slice(0, 10);
     let query = `INSERT INTO Annonces (id_annonce, titre_annonce, prix_bien, surface, descriptions, date_annonce, zip_code, city, state, address) 
