@@ -43,6 +43,7 @@ app.get('/simu', (req, res) => {
 });
 app.get('/annonces', (req, res) => {
     res.sendFile(__dirname + '/public/html/displayAnnonces.html');
+});
 app.get('/getTokenPro', (req, res) => {
     res.sendFile(__dirname+'/public/html/getTokenPro.html');
 });
