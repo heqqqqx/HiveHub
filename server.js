@@ -396,6 +396,8 @@ app.get('/session', (req, res) => {
     });
 });
 
+
+
 app.get('/dashboard', (req, res) => {
     const userId = req.session.userId;
     res.sendFile(__dirname + '/public/html/dashboard.html');
@@ -478,23 +480,39 @@ app.get('/download/:fileId', async(req, res) => {
 });
 
 
-let id_dosier = 0;
+
 app.post('/create-annonce', (req, res) => {
-    let { id, name, state, city, zipCode, address, prix, date, surface, description } = req.body;
-    id_dosier++;
+    let { name, id_utilisateur, state, city, zipCode, address, prix, date, surface, description } = req.body;
     date = new Date().toISOString().slice(0, 10);
-    let query = `INSERT INTO Annonces (id_annonce, titre_annonce, prix_bien, surface, descriptions, date_annonce, zip_code, city, state, address) 
+    let query = `INSERT INTO Annonces ( titre_annonce, prix_bien, surface, descriptions, date_annonce, zip_code, city, state, address,id_utilisateur) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    connection.query(query, [id, name, prix, surface, description, date, zipCode, city, state, address], (error, results) => {
+    connection.query(query, [name, prix, surface, description, date, zipCode, city, state, address, id_utilisateur], (error, results) => {
         if (error) {
             console.error(error);
-            res.status(500).send({ message: 'Server Error' });
+            res.status(500).send({ message: "error creating your account, you may have already created an account" });
         } else {
             res.status(200).send({ id: results.insertId, message: 'Annonce created successfully' });
         }
     });
 });
 
+
+// app.get('/check_annonces', (req, res) => {
+//     const userId = req.session.userId;
+//     const sql = 'SELECT * FROM Annonces WHERE id_utilisateur = ?';
+//     connection.query(sql, [userId], (error, results) => {
+//         if (error) {
+//             console.error(error);
+//             res.status(500).send({ message: 'User alreadycreated an annonce' });
+//         } else if (results.length === 0) {
+//             res.status(200).send({});
+//         } else {
+//             const user = results[0];
+//             const { id_utilisateur, titre_annonce, prix_bien, surface, descriptions, date_annonce, zip_code, city, state, address } = user;
+//             res.status(200).send({ id_utilisateur, titre_annonce, prix_bien, surface, descriptions, date_annonce, zip_code, city, state, address });
+//         }
+//     });
+// });
 
 
 app.listen(3000, () => {
