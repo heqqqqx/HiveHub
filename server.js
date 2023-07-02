@@ -58,7 +58,7 @@ app.get('/registerPro', (req, res) => {
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '1234',
+    password: 'root',
     database: 'solution_factory'
 });
 connection.connect(error => {
@@ -396,6 +396,48 @@ app.get('/session', (req, res) => {
     });
 });
 
+app.patch('/update-annonce/:type/:id', (req, res) => {
+    const annonceId = req.params.id;
+    const type = req.params.type;
+    const { value } = req.body;
+    console.log("req body : ", req.body);
+    // Utilisez la valeur du paramètre "type" pour déterminer quelle colonne mettre à jour
+    let columnName;
+    switch (type) {
+        case 'prix_bien':
+            columnName = 'prix_bien';
+            break;
+        case 'surface':
+            columnName = 'surface';
+            break;
+        case 'descriptions':
+            columnName = 'descriptions';
+            break;
+        case 'address':
+            columnName = 'address';
+            break;
+        case 'zip_code':
+            columnName = 'zip_code';
+            break;
+        case 'city':
+            columnName = 'city';
+            break;
+        default:
+            return res.status(400).send({ message: 'Type invalide' });
+    }
+
+    const query = `UPDATE Annonces SET ${columnName} = ? WHERE id_annonce = ?`;
+    connection.query(query, [value, annonceId], (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server Error' });
+        } else {
+            console.log('Annonce mise à jour:', results);
+            res.status(200).send({ message: 'Annonce mise à jour avec succès' });
+        }
+    });
+});
+
 
 
 app.get('/dashboard', (req, res) => {
@@ -495,7 +537,6 @@ app.post('/create-annonce', (req, res) => {
         }
     });
 });
-
 
 // app.get('/check_annonces', (req, res) => {
 //     const userId = req.session.userId;
