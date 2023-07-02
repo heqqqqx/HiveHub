@@ -442,7 +442,6 @@ app.patch('/update-annonce/:type/:id', (req, res) => {
 
 app.delete('/delete-annonce/:id', (req, res) => {
     const annonceId = req.params.id;
-
     const query = `DELETE FROM Annonces WHERE id_annonce = ?`;
     connection.query(query, [annonceId], (error, results) => {
         if (error) {
@@ -554,23 +553,43 @@ app.post('/create-annonce', (req, res) => {
     });
 });
 
-// app.get('/check_annonces', (req, res) => {
-//     const userId = req.session.userId;
-//     const sql = 'SELECT * FROM Annonces WHERE id_utilisateur = ?';
-//     connection.query(sql, [userId], (error, results) => {
-//         if (error) {
-//             console.error(error);
-//             res.status(500).send({ message: 'User alreadycreated an annonce' });
-//         } else if (results.length === 0) {
-//             res.status(200).send({});
-//         } else {
-//             const user = results[0];
-//             const { id_utilisateur, titre_annonce, prix_bien, surface, descriptions, date_annonce, zip_code, city, state, address } = user;
-//             res.status(200).send({ id_utilisateur, titre_annonce, prix_bien, surface, descriptions, date_annonce, zip_code, city, state, address });
-//         }
-//     });
-// });
+app.post('/annonces-interessees', (req, res) => {
+    const { id_banquier, id_annonce } = req.body;
 
+    const queryCheck = 'SELECT * FROM Annonces_Interessees WHERE id_banquier = ? AND id_annonce = ?';
+    connection.query(queryCheck, [id_banquier, id_annonce], (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server Error (déjà marquée intéressé ou jsp)' });
+        } else if (results.length > 0) {
+            res.status(400).send({ message: 'Annonce déjà marquée comme intéressée' });
+        } else {
+            const queryInsert = 'INSERT INTO Annonces_Interessees (id_banquier, id_annonce) VALUES (?, ?)';
+            connection.query(queryInsert, [id_banquier, id_annonce], (error, results) => {
+                if (error) {
+                    console.error(error);
+                    res.status(500).send({ message: 'Server Error' });
+                } else {
+                    res.status(200).send({ message: 'Annonce marquée comme intéressée' });
+                }
+            });
+        }
+    });
+});
+
+app.get('/annonces-interessees/:id_banquier', (req, res) => {
+    const id_banquier = req.params.id_banquier;
+
+    const query = 'SELECT * FROM Annonces_Interessees WHERE id_banquier = ?';
+    connection.query(query, [id_banquier], (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server Error' });
+        } else {
+            res.status(200).send(results);
+        }
+    });
+});
 
 app.listen(3000, () => {
     console.log('Server started on port 3000');
