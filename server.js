@@ -607,6 +607,20 @@ app.get('/annonces-interessees/:id_banquier', (req, res) => {
     });
 });
 
+app.get('/checkinteresses/:annonceId', (req, res) => {
+    const annonceId = req.params.annonceId;
+
+    const query = 'SELECT COUNT(*) AS count FROM Annonces_Interessees WHERE id_annonce = ?';
+    connection.query(query, [annonceId], (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server Error' });
+        } else {
+            const count = results[0].count;
+            res.status(200).send({ count });
+        }
+    });
+});
 app.listen(3000, () => {
     console.log('Server started on port 3000');
 });
