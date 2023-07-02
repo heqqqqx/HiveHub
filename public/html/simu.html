@@ -7,6 +7,36 @@
         .form-group:not(:first-child) {
             display: none;
         }
+        .chart {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+            align-items: center;
+        }
+
+        .chart-item {
+            width: 200px;
+            height: 200px;
+            margin: 10px;
+            border-radius: 50%;
+            background-color: lightgray;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chart-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .chart-label {
+            text-align: center;
+        }
+        
     </style>
     <link rel="stylesheet" href="../css/register.css">
     <script>
@@ -62,31 +92,54 @@
                 valuesDiv.innerHTML = "Il faut être majeur pour pouvoir s'engager sur un prêt";
             } else if (contratTravail !== "CDI" || periodeEssai === "en-periode-essai") {
                 valuesDiv.innerHTML += "Pour obtenir un prêt, il faut posséder un emploi stable en dehors de la période d'essai.";
-                }
-            else {
+            } else {
                 // Calcul du montant du prêt et de la durée
-                var rbcapacity=(parseInt(salaire)+parseInt(revenusExternes)-parseInt(rbPret)-300*parseInt(nbEnfants))*0.2
-                var durreannée = parseInt(parseInt(pretDemande)/(12*rbcapacity))+1;
-                var yearly=(12*rbcapacity);
-                var last_year=pretDemande-(12*rbcapacity)
-                if(durreannée>25){
-                    valuesDiv.innerHTML="Le montant de votre prêt ne correspond pas à votre cpacité de remboursement";
-                }else if (rbcapacity<0){
-                    valuesDiv.innerHTML = "Pourquoi demander un prêt";
-                }
-                else{
+                var rbcapacity = (parseInt(salaire) + parseInt(revenusExternes) - parseInt(rbPret) - 300 * parseInt(nbEnfants)) * 0.2;
+                var durreannée = parseInt(parseInt(pretDemande * 1.04) / (12 * rbcapacity)) + 1;
+                var yearly = (12 * rbcapacity);
+                var last_year = pretDemande * 1.04 - (12 * rbcapacity * (durreannée - 1));
         
-                    
-                    valuesDiv.innerHTML += "Capacité de remboursement estimée par mois: " +rbcapacity + " €";
-                    
-                    valuesDiv.innerHTML += "<br>Durée du prêt: " + durreannée + " ans";
-                    valuesDiv.innerHTML += "<br>Remboursement annuel: " + yearly + " €";
-                    valuesDiv.innerHTML += "<br>Montant la dernière année: " + last_year + " €";
-
+                if (durreannée > 25) {
+                    var chartDiv = document.createElement("div");
+                    var capacity_max = rbcapacity * 12 * 25;
+                    var capacityChart = createChart(capacity_max + " €", "Prêt maximal possible");
+                    chartDiv.appendChild(capacityChart);
+                    valuesDiv.appendChild(chartDiv);
+                } else if (rbcapacity < 0) {
+                    valuesDiv.innerHTML = "Pourquoi demander un prêt";
+                } else {
+                    // Création des graphiques circulaires
+                    var chartDiv = document.createElement("div");
+                    chartDiv.className = "chart";
+        
+                    // Capacité de remboursement estimée
+                    var capacityChart = createChart(rbcapacity + " €", "Votre Capacité de remboursement mensuel");
+                    chartDiv.appendChild(capacityChart);
+        
+                    // Durée du prêt
+                    var durationChart = createChart(durreannée + " ans", "Durée du prêt (années)");
+                    chartDiv.appendChild(durationChart);
+        
+                    // Remboursement annuel
+                    var yearlyChart = createChart(yearly + " €", "Remboursement annuel");
+                    chartDiv.appendChild(yearlyChart);
+        
+                    // Montant la dernière année
+                    var lastYearChart = createChart(last_year + " €", "Montant la dernière année");
+                    chartDiv.appendChild(lastYearChart);
+        
+                    valuesDiv.appendChild(chartDiv);
                 }
-                
             }
         }
+        
+        function createChart(value, label) {
+            var chart = document.createElement("div");
+            chart.className = "chart-item";
+            chart.innerHTML = "<span class='chart-value'>" + value + "</span><span class='chart-label'>" + label + "</span>";
+            return chart;
+        }
+        
     </script>
 </head>
 <body>
@@ -177,11 +230,12 @@
             <div id="submit-section" style="display: none;" class="form-group submit-button">
                 <button type="button" onclick="submitForm()">Envoyer</button>
             </div>
-            <div class="submit-section" id="values"></div>
+            
         </form>
+        
     </div>
 </div>
-
+<div  id="values"></div>
 
 </body>
 </html>
