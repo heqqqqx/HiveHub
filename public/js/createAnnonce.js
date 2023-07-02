@@ -1,3 +1,19 @@
+fetch('/getmydata', {
+        method: 'GET',
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data) {
+            console.log("You can\'t create an annonce if you already have one");
+            window.location.href = '/dashboard';
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+
+
 function addAnnonce() {
     var name = document.getElementById("title").value;
     var state = document.getElementById("state").value;
