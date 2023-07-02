@@ -174,7 +174,6 @@ fetch('http://localhost:3000/session')
             fetch('http://localhost:3000/getmydata')
                 .then(response => response.json())
                 .then(data => {
-
                     const annoncesList = document.querySelector('.jobsearch-ResultsList');
                     const rightDisplay = document.querySelector('.attributs_demande');
                     const rightPanel = document.querySelector('.annonces-ViewAnnoncePaneWrapper');
@@ -185,6 +184,15 @@ fetch('http://localhost:3000/session')
                     rightDisplay.innerHTML = '';
 
                     data.forEach((annonce, index) => {
+                        fetch('http://localhost:3000/checkinteresses/' + annonce.id_annonce)
+                            .then(response => response.json())
+                            .then(data => {
+                                const personnesInteresseesElement = annonceElement.querySelector('.personnesInteressees_number');
+                                personnesInteresseesElement.textContent = data.count;
+                            })
+                            .catch(error => {
+                                console.error('Erreur lors de la récupération du nombre de personnes intéressées:', error);
+                            });
                         const annonceElement = document.createElement('li');
                         let rawDate = new Date(annonce.date_annonce);
                         let formattedDate = ("0" + rawDate.getDate()).slice(-2) + "/" + ("0" + (rawDate.getMonth() + 1)).slice(-2) + "/" + rawDate.getFullYear();
@@ -201,9 +209,13 @@ fetch('http://localhost:3000/session')
                   <div class="infosGenerales">
                     <div class="date_annonce">${formattedDate}</div>
                     <div class="state">${annonce.state}</div>
+                    <div class="personnesInteressees">
+                    <span class="personnesInteressees_title">Personnes intéressées :</span>
+                    <span class="personnesInteressees_number"></span>
                   </div>
                   <button class="view-more" data-index="${index}">Voir plus</button>
                   <button class="remove" data-index="${index}">Supprimer l'annonce</button>
+                  
                 </td>
               </tr>
             </tbody>
