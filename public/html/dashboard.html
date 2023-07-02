@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Tableau de bord de l'utilisateur</title>
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/navbar.css">
 </head>
+
 <body>
     <div id="navbar">
         <div id="logo">
@@ -20,8 +22,7 @@
                 <li><a class="vertical_bar">|</a></li>
                 <li id="client-space">
                     <a id="client-space-href" href="/register">
-                        <img src="../image/icon/cadenas.png" alt="Cadenas" class="cadenas-icon" />
-                        Espace client
+                        <img src="../image/icon/cadenas.png" alt="Cadenas" class="cadenas-icon" /> Espace client
                     </a>
                 </li>
                 <li id="logout" style="display: none;"><a href="/logout">Se déconnecter</a></li>
@@ -29,19 +30,30 @@
             </ul>
         </div>
     </div>
-    <h1>Tableau de bord</h1>
-    <div id="user-info">
-        <h2>Informations sur l'utilisateur</h2>
-        <form id="update-form">
-            <label for="adresse">Adresse:</label>
-            <input type="text" id="adresse" name="adresse">
-            <input type="submit" value="Mettre à jour">
-        </form>
+    <div class="annonces-main-content">
+        <div class="annonces-leftPanel">
+            <div class="mosaic-annonces">
+                <ul class="jobsearch-ResultsList">
+
+                </ul>
+            </div>
+        </div>
+        <div class="annonces-rightPanel">
+            <div class="annonces-ViewAnnoncePaneWrapper">
+                <div class="rightDisplay">
+                    <div class="attributs_demande">
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
     </div>
-    <div id="user-ads">
-        <h2>Vos annonces</h2>
-        <div id="ads-list"></div>
     </div>
     <script src="../js/dashboard.js"></script>
+    <script src="../js/main.js"></script>
 </body>
+
 </html>

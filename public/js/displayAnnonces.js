@@ -1,3 +1,20 @@
+fetch('/session', {
+        method: 'GET',
+        credentials: 'include' // include cookies with the request
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.type_utilisateur != 'banquier') {
+            console.log('Redirecting to index.html');
+            window.location.href = '/index';
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+
+
+
 fetch('http://localhost:3000/getdata')
     .then(response => response.json())
     .then(data => {
