@@ -58,7 +58,7 @@ app.get('/registerPro', (req, res) => {
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '1234',
+    password: 'root',
     database: 'solution_factory'
 });
 connection.connect(error => {
@@ -495,7 +495,6 @@ app.post('/create-annonce', (req, res) => {
         }
     });
 });
-
 
 // app.get('/check_annonces', (req, res) => {
 //     const userId = req.session.userId;
