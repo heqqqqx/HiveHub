@@ -58,7 +58,7 @@ app.get('/registerPro', (req, res) => {
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '1234',
+    password: 'root',
     database: 'solution_factory'
 });
 connection.connect(error => {
@@ -153,6 +153,7 @@ app.post('/create-account', (req, res) => {
                             res.status(500).send({ message: 'Server Error' });
                         } else {
                             // Stocker l'ID utilisateur dans la session
+                            console.log("user id : ", results.insertId)
                             req.session.userId = results.insertId;
 
                             res.status(200).send({ id: results.insertId, message: 'Account created successfully' });
@@ -163,13 +164,13 @@ app.post('/create-account', (req, res) => {
         }
     });
 });
-
 app.post('/login', (req, res) => {
-    let { email, mot_de_passe } = req.body;
+    const { email, mot_de_passe } = req.body;
 
     // Vérifier si l'utilisateur existe
     const sql = 'SELECT * FROM Utilisateurs WHERE email = ?';
     connection.query(sql, [email], (error, results) => {
+
         if (error) {
             console.error(error);
             res.status(500).send({ message: 'Server Error' });
@@ -184,15 +185,17 @@ app.post('/login', (req, res) => {
                 } else if (!result) {
                     res.status(401).send({ message: 'Invalid email or password.' });
                 } else {
-                    // Stocker l'ID utilisateur dans la session
-                    req.session.userId = results[0].id;
 
-                    res.status(200).send({ id: results[0].id, message: 'Logged in successfully' });
+                    req.session.userId = results[0].id_utilisateur;
+
+                    res.status(200).send({ id: results[0].id_utilisateur, message: 'Logged in successfully' });
                 }
             });
         }
     });
 });
+
+
 
 app.patch('/update-account', (req, res) => {
     const userId = req.session.userId;
@@ -207,7 +210,8 @@ app.patch('/update-account', (req, res) => {
         } else {
             res.status(200).send({ message: 'Address updated successfully' });
         }
-    })});
+    })
+});
 app.get('/getdata', (req, res) => {
     let sql = 'SELECT * FROM annonces';
     connection.query(sql, (err, results) => {
@@ -216,36 +220,25 @@ app.get('/getdata', (req, res) => {
         res.send(results);
     });
 });
-app.post('/login', (req, res) => {
-    const { email, mot_de_passe } = req.body;
-
-    const sql = 'SELECT * FROM Utilisateurs WHERE email = ?';
-    connection.query(sql, [email], (error, results) => {
+app.get('/getmydata', (req, res) => {
+    const userId = req.session.userId;
+    if (!userId) {
+        res.status(403).send({ message: 'Not Authenticated' });
+        return;
+    }
+    const query = 'SELECT * FROM annonces WHERE id_utilisateur = ?';
+    connection.query(query, [userId], (error, results) => {
         if (error) {
             console.error(error);
             res.status(500).send({ message: 'Server Error' });
-        } else if (results.length === 0) {
-            res.status(401).send({ message: 'Invalid email or password.' });
         } else {
-            const user = results[0];
-            bcrypt.compare(mot_de_passe, user.mot_de_passe, (err, result) => {
-                if (err) {
-                    console.error(err);
-                    res.status(500).send({ message: 'Server Error' });
-                } else if (!result) {
-                    res.status(401).send({ message: 'Invalid email or password.' });
-                } else {
-
-                    const payload = { id: user.id, email: user.email, type_utilisateur: user.type_utilisateur };
-                    const token = jwt.sign(payload, 'abcd', { expiresIn: '1h' });
-
-                    res.status(200).send({ token });
-                }
-            });
+            console.log(results);
+            res.status(200).send(results);
         }
     });
 });
-const allowedDomains = ['@efrei.net', '@societegenerale.fr',];
+
+const allowedDomains = ['@efrei.net', '@societegenerale.fr', ];
 app.post('/get-email', (req, res) => {
     const { email } = req.body;
     console.log('E-mail récupéré:', email);
@@ -355,6 +348,7 @@ app.post('/create-accountPro', (req, res) => {
                                     console.error(error);
                                     res.status(500).send({ message: 'Server Error' });
                                 } else {
+
                                     console.log('User account created:', results.insertId);
                                     res.status(200).send({ id: results.insertId, message: 'Account created successfully' });
                                 }
@@ -373,7 +367,7 @@ app.get('/logout', (req, res) => {
             console.error(err);
             res.status(500).send({ message: 'Server Error' });
         } else {
-            res.status(200).send({ message: 'Logout successful' });
+            res.status(200).send({ message: 'Logged out' });
         }
     });
 });
@@ -442,7 +436,7 @@ app.post('/upload', upload.array('file'), (req, res) => {
 });
 
 
-app.get('/download/:fileId', async (req, res) => {
+app.get('/download/:fileId', async(req, res) => {
     const fileId = req.params.fileId;
     console.log('File ID:', fileId);
 
@@ -486,7 +480,7 @@ app.get('/download/:fileId', async (req, res) => {
 
 let id_dosier = 0;
 app.post('/create-annonce', (req, res) => {
-    let {id, name, state, city, zipCode, address, prix, date, surface, description } = req.body;
+    let { id, name, state, city, zipCode, address, prix, date, surface, description } = req.body;
     id_dosier++;
     date = new Date().toISOString().slice(0, 10);
     let query = `INSERT INTO Annonces (id_annonce, titre_annonce, prix_bien, surface, descriptions, date_annonce, zip_code, city, state, address) 
