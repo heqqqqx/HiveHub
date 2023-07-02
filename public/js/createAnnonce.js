@@ -11,9 +11,9 @@ function addAnnonce() {
     var date = null;
 
     fetch('/session', {
-        method: 'GET',
-        credentials: 'include'
-    })
+            method: 'GET',
+            credentials: 'include'
+        })
         .then(response => response.json())
         .then(data => {
             if (data.id_utilisateur) {
@@ -22,12 +22,12 @@ function addAnnonce() {
                 var id_utilisateur = data.id_utilisateur;
 
                 fetch('/create-annonce', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ name, id_utilisateur, state, city, zipCode, address, prix, date, surface, description })
-                })
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ name, id_utilisateur, state, city, zipCode, address, prix, date, surface, description })
+                    })
                     .then(response => response.json())
                     .then(data => {
                         console.log(data);
@@ -37,7 +37,7 @@ function addAnnonce() {
                             alert('Annonce created successfully!');
                         }
                     });
-                // window.location.href = '/index';
+                window.location.href = '/index';
 
 
             } else {
