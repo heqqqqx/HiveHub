@@ -7,6 +7,30 @@ fetch('/session', {
         if (data.type_utilisateur != 'banquier') {
             console.log('Redirecting to index.html');
             window.location.href = '/index';
+
+            function showPopup(message, type) {
+                console.log('Showing popup:', message, type);
+
+                const popup = document.createElement('div');
+                popup.classList.add('popup', type);
+                popup.textContent = message;
+
+                popup.style.position = 'fixed';
+                popup.style.right = '20px';
+                popup.style.top = '20px';
+                popup.style.backgroundColor = type === 'error' ? 'red' : 'green';
+                popup.style.color = 'white';
+                popup.style.padding = '20px';
+                popup.style.borderRadius = '5px';
+
+                document.body.appendChild(popup);
+
+                setTimeout(() => {
+                    console.log('Removing popup');
+                    popup.remove();
+                }, 1000);
+            }
+            showPopup('Vous n\'avez pas accès à cette page', 'error');
         }
     })
     .catch((error) => {
