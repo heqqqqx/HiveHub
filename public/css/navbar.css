@@ -36,9 +36,6 @@ body {
 
 #navbar a:hover {
     color: #ff914d;
-    /* border-bottom: 2px solid #ff914d; */
-    -webkit-transition: all 400ms linear 0s;
-    -o-transition: all 400ms linear 0s;
     transition: all 400ms linear 0s;
 }
 
@@ -52,6 +49,16 @@ body {
 
 #navbar .vertical_bar {
     color: #ff914d;
+}
+
+#navbar #logout {
+    background-color: transparent;
+    border: 3px solid #ff914d;
+    border-radius: 5px;
+    padding: 7px 10px;
+    color: #ffffff;
+    font-size: 18px;
+    cursor: pointer;
 }
 
 p {
@@ -69,14 +76,4 @@ p {
 .logo {
     height: 70px;
     width: 70px;
-}
-
-.logout-button{
-    background-color: transparent;
-    border: 3px solid #ff914d;;
-    border-radius: 5px ;
-    padding: 7px 10px;
-    color: #ffffff;
-    font-size: 18px;
-    cursor: pointer;
 }

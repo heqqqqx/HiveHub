@@ -1,3 +1,16 @@
+document.getElementById('logout').addEventListener('click', function(event) {
+
+
+    fetch('/logout', {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then(response => response.json())
+        .then(data => {
+
+            window.location.href = '/';
+        })
+});
 fetch('/session', {
         method: 'GET',
         credentials: 'include'
@@ -24,27 +37,11 @@ fetch('/session', {
         } else {
             document.getElementById('logout').style.display = 'none';
             document.getElementById('client-space-href').href = '/register';
+            document.querySelector('#nav-items ul li:nth-child(3) a').href = '/register';
+
             console.log('User is not logged in');
         }
     })
     .catch((error) => {
         console.error('Error:', error);
     });
-
-
-function logout() {
-    fetch('/logout', {
-            method: 'GET',
-            credentials: 'include'
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            if (data.message) {
-                alert(data.message);
-            } else {
-                alert('You have been logged out successfully!');
-            }
-        });
-    window.location.href = '/index';
-}
