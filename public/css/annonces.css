@@ -127,3 +127,12 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
+.mark-interested-btn {
+    background-color: #4285f4;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}

@@ -133,10 +133,10 @@ fetch('http://localhost:3000/getdata')
                             .then(response => response.json())
                             .then(data => {
 
-                                if (data.message) {
+                                if (data.status == 200) {
                                     showPopup(data.message, 'success');
                                 } else {
-                                    showPopup('Une erreur s\'est produite lors de la marquage comme intéressé.', 'error');
+                                    showPopup(data.message, 'error');
                                 }
                             })
                             .catch(error => {

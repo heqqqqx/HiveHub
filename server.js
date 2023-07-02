@@ -560,7 +560,7 @@ app.post('/annonces-interessees', (req, res) => {
     connection.query(queryCheck, [id_banquier, id_annonce], (error, results) => {
         if (error) {
             console.error(error);
-            res.status(500).send({ message: 'Server Error (déjà marquée intéressé ou jsp)' });
+            res.status(500).send({ message: 'Server Error' });
         } else if (results.length > 0) {
             res.status(400).send({ message: 'Annonce déjà marquée comme intéressée' });
         } else {
@@ -576,11 +576,27 @@ app.post('/annonces-interessees', (req, res) => {
         }
     });
 });
-
+app.delete('/annonces-interessees', (req, res) => {
+    const { id_banquier, id_annonce } = req.body;
+    const query = 'DELETE FROM Annonces_Interessees WHERE id_banquier = ? AND id_annonce = ?';
+    connection.query(query, [id_banquier, id_annonce], (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server Error' });
+        } else {
+            res.status(200).send({ message: 'Annonce supprimée des annonces intéressées' });
+        }
+    });
+});
 app.get('/annonces-interessees/:id_banquier', (req, res) => {
     const id_banquier = req.params.id_banquier;
 
-    const query = 'SELECT * FROM Annonces_Interessees WHERE id_banquier = ?';
+    const query = `
+        SELECT annonces.*
+        FROM Annonces_Interessees
+        INNER JOIN annonces ON Annonces_Interessees.id_annonce = annonces.id_annonce
+        WHERE Annonces_Interessees.id_banquier = ?
+    `;
     connection.query(query, [id_banquier], (error, results) => {
         if (error) {
             console.error(error);
