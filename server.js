@@ -28,6 +28,7 @@ app.use(express.static('public'));
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/html/index.html');
 });
+
 app.get('/createAnnonce', (req, res) => {
     res.sendFile(__dirname + '/public/html/createAnnonce.html');
 });
@@ -439,9 +440,24 @@ app.patch('/update-annonce/:type/:id', (req, res) => {
 });
 
 
+app.delete('/delete-annonce/:id', (req, res) => {
+    const annonceId = req.params.id;
+
+    const query = `DELETE FROM Annonces WHERE id_annonce = ?`;
+    connection.query(query, [annonceId], (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server Error' });
+        } else {
+            console.log('Annonce mise à jour:', results);
+            res.status(200).send({ message: 'Annonce mise à jour avec succès' });
+        }
+    });
+});
+
+
 
 app.get('/dashboard', (req, res) => {
-    const userId = req.session.userId;
     res.sendFile(__dirname + '/public/html/dashboard.html');
 });
 

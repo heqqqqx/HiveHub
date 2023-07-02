@@ -4,8 +4,8 @@ fetch('/getmydata', {
     })
     .then(response => response.json())
     .then(data => {
-        if (data) {
-            console.log("You can\'t create an annonce if you already have one");
+        if (data.length != 0) {
+            console.log("You can't create an annonce if you already have one");
             window.location.href = '/dashboard';
         }
     })
@@ -48,16 +48,24 @@ function addAnnonce() {
                     .then(data => {
                         console.log(data);
                         if (data.message) {
-                            alert(data.message);
+                            showPopup(data.message, 'success');
+                            setTimeout(() => {
+                                console.log('Redirecting to index.html');
+                                window.location.href = '/index';
+                            }, 1000);
                         } else {
-                            alert('Annonce created successfully!');
+                            showPopup('error', 'error');
+                            setTimeout(() => {
+                                console.log('Redirecting to index.html');
+                                window.location.href = '/index';
+                            }, 1000);
                         }
                     });
-                window.location.href = '/index';
+
 
 
             } else {
-                alert("didnt worked : " + data.id_utilisateur);
+                showPopup('Erreur', 'error');
             }
         })
         .catch((error) => {
@@ -67,4 +75,27 @@ function addAnnonce() {
 
 
 
+}
+
+function showPopup(message, type) {
+    console.log('Showing popup:', message, type);
+
+    const popup = document.createElement('div');
+    popup.classList.add('popup', type);
+    popup.textContent = message;
+
+    popup.style.position = 'fixed';
+    popup.style.right = '20px';
+    popup.style.top = '20px';
+    popup.style.backgroundColor = type === 'error' ? 'red' : 'green';
+    popup.style.color = 'white';
+    popup.style.padding = '20px';
+    popup.style.borderRadius = '5px';
+
+    document.body.appendChild(popup);
+
+    setTimeout(() => {
+        console.log('Removing popup');
+        popup.remove();
+    }, 1000);
 }

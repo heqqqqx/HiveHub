@@ -29,6 +29,7 @@ fetch('http://localhost:3000/getmydata')
                     <div class="state">${annonce.state}</div>
                   </div>
                   <button class="view-more" data-index="${index}">Voir plus</button>
+                  <button class="remove" data-index="${index}">Supprimer l'annonce</button>
                 </td>
               </tr>
             </tbody>
@@ -38,6 +39,32 @@ fetch('http://localhost:3000/getmydata')
 
             annoncesList.appendChild(annonceElement);
         });
+        document.querySelectorAll('.remove').forEach((btn) => {
+            btn.addEventListener('click', (event) => {
+                const annonceId = data[event.target.dataset.index].id_annonce;
+                fetch(`http://localhost:3000/delete-annonce/${annonceId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            id: annonceId
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        showPopup("Annonce supprimée", "error");
+                        setTimeout(() => {
+                            window.location.href = '/dashboard';
+                        }, 1000);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            })
+        })
+
+
 
         document.querySelectorAll('.view-more').forEach((btn) => {
             btn.addEventListener('click', (event) => {
@@ -147,3 +174,26 @@ fetch('http://localhost:3000/getmydata')
     .catch((error) => {
         console.error('Erreur:', error);
     });
+
+function showPopup(message, type) {
+    console.log('Showing popup:', message, type);
+
+    const popup = document.createElement('div');
+    popup.classList.add('popup', type);
+    popup.textContent = message;
+
+    popup.style.position = 'fixed';
+    popup.style.right = '20px';
+    popup.style.top = '20px';
+    popup.style.backgroundColor = type === 'error' ? 'red' : 'green';
+    popup.style.color = 'white';
+    popup.style.padding = '20px';
+    popup.style.borderRadius = '5px';
+
+    document.body.appendChild(popup);
+
+    setTimeout(() => {
+        console.log('Removing popup');
+        popup.remove();
+    }, 1000);
+}
