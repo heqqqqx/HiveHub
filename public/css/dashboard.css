@@ -25,6 +25,15 @@
     cursor: pointer;
 }
 
+.remove {
+    background-color: #ea4335;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
 textarea {
     width: 98%;
     height: 100px;
