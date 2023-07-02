@@ -30,3 +30,21 @@ fetch('/session', {
     .catch((error) => {
         console.error('Error:', error);
     });
+
+
+function logout() {
+    fetch('/logout', {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.message) {
+                alert(data.message);
+            } else {
+                alert('You have been logged out successfully!');
+            }
+        });
+    window.location.href = '/index';
+}
