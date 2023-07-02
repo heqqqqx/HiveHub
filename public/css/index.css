@@ -3,31 +3,37 @@ body {
     margin: 0px;
     background-image: url(../image/background-image-2.png);
     background-repeat: no-repeat;
-  }
-  
-  .our_service_area {
+}
+
+.our_service_area {
     background: #1e2126;
     overflow: hidden;
     clear: both;
-  }
-  
-  .our_service_area .left_service {
+}
+
+.our_service_area .left_service {
     width: calc(50% + 80px);
     float: left;
     overflow: hidden;
     background: url(../image/service-bg.jpg) no-repeat scroll center center;
     background-size: cover;
-  
-  }
-  
-  .our_service_area .left_service .left_service_inner {
+}
+
+h1 {
+    font-size: 40px;
+    color: #ffffff;
+    margin: 0px;
+    margin-bottom: 50px;
+}
+
+.our_service_area .left_service .left_service_inner {
     max-width: 635px;
     float: right;
     padding-right: 65px;
     margin: 65px 0px;
-  }
-  
-  .our_service_area .left_service .left_service_inner .service_item {
+}
+
+.our_service_area .left_service .left_service_inner .service_item {
     width: calc(100% / 2 - 20px);
     height: calc(100% / 2 - 20px);
     box-sizing: border-box;
@@ -36,11 +42,9 @@ body {
     vertical-align: top;
     padding-right: 30px;
     padding-bottom: 25px;
-  }
-  
-  
-  
-  .our_service_area .left_service .left_service_inner .service_item .service_item_inner {
+}
+
+.our_service_area .left_service .left_service_inner .service_item .service_item_inner {
     background: #1e2126;
     padding: 35px 20px 30px 20px;
     text-align: center;
@@ -48,41 +52,41 @@ body {
     -webkit-transition: all 400ms linear 0s;
     -o-transition: all 400ms linear 0s;
     transition: all 400ms linear 0s;
-  }
-  
-  .our_service_area .left_service .left_service_inner .service_item :hover {
+}
+
+.our_service_area .left_service .left_service_inner .service_item :hover {
     background: #ff914d;
     -webkit-transition: all 400ms linear 0s;
     -o-transition: all 30ms linear 0s;
     transition: all 400ms linear 0s;
-  
-  }
-  
-  .our_service_area .left_service .left_service_inner .service_item .service_item_inner :hover{
-    background: #ff914d;}
-  
-  .our_service_area .left_service .left_service_inner .service_item .service_item_inner .service_icon img {
+}
+
+.our_service_area .left_service .left_service_inner .service_item .service_item_inner :hover {
+    background: #ff914d;
+}
+
+.our_service_area .left_service .left_service_inner .service_item .service_item_inner .service_icon img {
     opacity: 1;
     -webkit-transition: all 400ms linear 0s;
     -o-transition: all 400ms linear 0s;
     transition: all 400ms linear 0s;
     height: 48px;
     width: 48px;
-  }
-  
-  .our_service_area .left_service .left_service_inner .service_item .service_item_inner .view_btn {
+}
+
+.our_service_area .left_service .left_service_inner .service_item .service_item_inner .view_btn {
     color: #ffffff;
     text-transform: uppercase;
     text-decoration: none;
-  }
-  
-  .main .main-content .main-text h1 {
+}
+
+.main .main-content .main-text h1 {
     font-weight: bold;
     text-transform: uppercase;
     padding: 13px 0px 8px 0px;
-  }
-  
-  .our_service_area .left_service .left_service_inner .service_item .service_item_inner h4 {
+}
+
+.our_service_area .left_service .left_service_inner .service_item .service_item_inner h4 {
     font-size: 12px;
     font-family: "Montserrat", sans-serif;
     font-weight: bold;
@@ -90,15 +94,15 @@ body {
     text-transform: uppercase;
     text-decoration: none;
     padding: 13px 0px 8px 0px;
-  }
-  
-  .our_service_area .right_service {
+}
+
+.our_service_area .right_service {
     width: calc(50% - 80px);
     float: right;
     overflow: hidden;
-  }
-  
-  .main_b_title h2 {
+}
+
+.main_b_title h2 {
     font-size: 40px;
     font-family: "PT Sans", sans-serif;
     color: #e8e8e8;
@@ -106,26 +110,28 @@ body {
     text-transform: uppercase;
     position: relative;
     z-index: 2;
-  }
-  .secondary_b_title  {
+}
+
+.secondary_b_title {
     color: #ff914d;
-  }
-  .main_b_title h6 {
+}
+
+.main_b_title h6 {
     font-size: 15px;
     font-family: "PT Sans", sans-serif;
     color: #ff914d;
     font-weight: bold;
     padding-top: 12px;
     text-transform: uppercase;
-  }
-  
-  .our_service_area .right_service .right_service_text {
+}
+
+.our_service_area .right_service .right_service_text {
     max-width: 380px;
     margin-left: 95px;
     padding-top: 100px;
-  }
-  
-  .main_b_title h2:before {
+}
+
+.main_b_title h2:before {
     content: "";
     width: 170px;
     height: 100px;
@@ -134,36 +140,33 @@ body {
     left: 47px;
     bottom: 10px;
     z-index: -1;
-  }
-  
-  .border_bar {
+}
+
+.border_bar {
     height: 1px;
     background: #ff914d;
     width: 100%;
     margin-top: 70px;
-  }
-  
-  
-  
-  
-  #main-content {
+}
+
+#main-content {
     display: flex;
     justify-content: space-between;
     padding-left: 50px;
     padding-right: 50px;
     padding-top: 20px;
     padding-bottom: 20px;
-  }
-  
-  #main-text {
+}
+
+#main-text {
     font-size: 40px;
-  }
-  
-  #main-image {
+}
+
+#main-image {
     width: 50%;
     height: 50%;
-  }
-  
-  p {
+}
+
+p {
     margin-top: 1px;
-  }
+}

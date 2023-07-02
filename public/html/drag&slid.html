@@ -1,116 +1,120 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <link rel="stylesheet" type="text/css" href="../css/drag&slid.css">
 </head>
+
 <body>
-  <div id="navbar">
-    <div id="logo">
-        <a href="index.html">
-            <img src="../image/icon/hiveHub.png" alt="Logo de hiveHub" class="logo" />
-        </a>
+    <div id="navbar">
+        <div id="logo">
+            <a href="/index">
+                <img src="../image/icon/hiveHub.png" alt="Logo de hiveHub" class="logo" />
+            </a>
+        </div>
+        <div id="nav-items">
+            <ul>
+                <li><a href="/index">Qui sommes-nous ?</a></li>
+                <li><a class="vertical_bar">|</a></li>
+                <li><a href="/createAnnonce">Emprunter</a></li>
+                <li><a class="vertical_bar">|</a></li>
+                <li id="client-space">
+                    <a id="client-space-href" href="/register">
+                        <img src="../image/icon/cadenas.png" alt="Cadenas" class="cadenas-icon" /> Espace client
+                    </a>
+                </li>
+                <li id="logout" style="display: none;"><a href="/logout">Se déconnecter</a></li>
+
+            </ul>
+        </div>
     </div>
-    <div id="nav-items">
-        <ul>
-            <li><a href="/index">Qui sommes-nous ?</a></li>
-            <li><a class="vertical_bar">|</a></li>
-            <li><a href="/">Emprunter</a></li>
-            <li><a class="vertical_bar">|</a></li>
-            <li id="client-space">
-                <a href="/register">
-                    <img src="../image/icon/cadenas.png" alt="Cadenas" class="cadenas-icon" />
-                    Espace client
-                </a>
-            </li>
-        </ul>
+    <h2>Drag and Drop File Upload</h2>
+    <div id="drop_zone1" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event, 1)">
+        Drop files here for Upload 1
     </div>
-</div>
-<h2>Drag and Drop File Upload</h2>
-<div id="drop_zone1" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event, 1)">
-    Drop files here for Upload 1
-</div>
-<div id="drop_zone2" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event, 2)">
-    Drop files here for Upload 2
-</div>
-<div id="drop_zone3" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event, 3)">
-    Drop files here for Upload 3
-</div>
-<img id="file_icon1" src="../image/image_pdf.png" width="50" height="50" style="display: none;">
-<img id="file_icon2" src="../image/image_pdf.png" width="50" height="50" style="display: none;">
-<img id="file_icon3" src="../image/image_pdf.png" width="50" height="50" style="display: none;">
-<br>
-<p id="file_name1"></p>
-<p id="file_name2"></p>
-<p id="file_name3"></p>
-<input type="button" value="Supprimer" onclick="deleteFile(1)" id="delete_button1" style="display: none;">
-<input type="button" value="Supprimer" onclick="deleteFile(2)" id="delete_button2" style="display: none;">
-<input type="button" value="Supprimer" onclick="deleteFile(3)" id="delete_button3" style="display: none;">
-<input type="button" value="Upload" onclick="uploadFiles()" id="upload_button">
+    <div id="drop_zone2" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event, 2)">
+        Drop files here for Upload 2
+    </div>
+    <div id="drop_zone3" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event, 3)">
+        Drop files here for Upload 3
+    </div>
+    <img id="file_icon1" src="../image/image_pdf.png" width="50" height="50" style="display: none;">
+    <img id="file_icon2" src="../image/image_pdf.png" width="50" height="50" style="display: none;">
+    <img id="file_icon3" src="../image/image_pdf.png" width="50" height="50" style="display: none;">
+    <br>
+    <p id="file_name1"></p>
+    <p id="file_name2"></p>
+    <p id="file_name3"></p>
+    <input type="button" value="Supprimer" onclick="deleteFile(1)" id="delete_button1" style="display: none;">
+    <input type="button" value="Supprimer" onclick="deleteFile(2)" id="delete_button2" style="display: none;">
+    <input type="button" value="Supprimer" onclick="deleteFile(3)" id="delete_button3" style="display: none;">
+    <input type="button" value="Upload" onclick="uploadFiles()" id="upload_button">
 
-<script>
-let selectedFiles = [null, null, null];
+    <script>
+        let selectedFiles = [null, null, null];
 
-function handleDragOver(event) {
-  event.preventDefault();
-  console.log('Handling drag over.');
-}
+        function handleDragOver(event) {
+            event.preventDefault();
+            console.log('Handling drag over.');
+        }
 
-function handleFileDrop(event, id) {
-  event.preventDefault();
-  console.log(`Handling file drop for ID: ${id}.`);
-  selectedFiles[id - 1] = event.dataTransfer.files[0];
-  console.log(`Selected file for ID ${id}:`, selectedFiles[id - 1]);
-  document.getElementById('file_icon' + id).style.display = 'block';
-  document.getElementById('file_name' + id).textContent = selectedFiles[id - 1].name;
-  document.getElementById('delete_button' + id).style.display = 'inline-block';
-}
+        function handleFileDrop(event, id) {
+            event.preventDefault();
+            console.log(`Handling file drop for ID: ${id}.`);
+            selectedFiles[id - 1] = event.dataTransfer.files[0];
+            console.log(`Selected file for ID ${id}:`, selectedFiles[id - 1]);
+            document.getElementById('file_icon' + id).style.display = 'block';
+            document.getElementById('file_name' + id).textContent = selectedFiles[id - 1].name;
+            document.getElementById('delete_button' + id).style.display = 'inline-block';
+        }
 
-function deleteFile(id) {
-  console.log(`Deleting file for ID: ${id}`);
-  selectedFiles[id - 1] = null;
-  document.getElementById('file_icon' + id).style.display = 'none';
-  document.getElementById('file_name' + id).textContent = '';
-  document.getElementById('delete_button' + id).style.display = 'none';
-}
+        function deleteFile(id) {
+            console.log(`Deleting file for ID: ${id}`);
+            selectedFiles[id - 1] = null;
+            document.getElementById('file_icon' + id).style.display = 'none';
+            document.getElementById('file_name' + id).textContent = '';
+            document.getElementById('delete_button' + id).style.display = 'none';
+        }
 
-function uploadFiles() {
-  console.log('Uploading files...');
-  let formData = new FormData();
-  selectedFiles.forEach((file, index) => {
-    if (file) {
-      console.log(`Adding file ${index} to form data.`);
-      formData.append("file", file);
-    }
-  });
+        function uploadFiles() {
+            console.log('Uploading files...');
+            let formData = new FormData();
+            selectedFiles.forEach((file, index) => {
+                if (file) {
+                    console.log(`Adding file ${index} to form data.`);
+                    formData.append("file", file);
+                }
+            });
 
-  fetch('/upload', {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => {
-    console.log('Response received:', response);
-    return response.json();
-  })
-  .then(result => {
-    console.log('Success:', result);
-    for (let id = 1; id <= 3; id++) {
-      deleteFile(id);
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
-}
-</script>
+            fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    console.log('Response received:', response);
+                    return response.json();
+                })
+                .then(result => {
+                    console.log('Success:', result);
+                    for (let id = 1; id <= 3; id++) {
+                        deleteFile(id);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
 
-<button onclick="downloadFile('fichier1-23')">Download File</button>
+    <button onclick="downloadFile('fichier1-23')">Download File</button>
 
-<script>
-function downloadFile(fileId) {
-    window.open(`/download/${fileId}`, '_blank');
-}
-</script>
+    <script>
+        function downloadFile(fileId) {
+            window.open(`/download/${fileId}`, '_blank');
+        }
+    </script>
 
-
+    <script src="../js/main.js"></script>
 </body>
+
 </html>

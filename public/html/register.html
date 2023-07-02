@@ -10,7 +10,7 @@
 <body>
     <div id="navbar">
         <div id="logo">
-            <a href="index.html">
+            <a href="/index">
                 <img src="../image/icon/hiveHub.png" alt="Logo de hiveHub" class="logo" />
             </a>
         </div>
@@ -18,14 +18,15 @@
             <ul>
                 <li><a href="/index">Qui sommes-nous ?</a></li>
                 <li><a class="vertical_bar">|</a></li>
-                <li><a href="/">Emprunter</a></li>
+                <li><a href="/createAnnonce">Emprunter</a></li>
                 <li><a class="vertical_bar">|</a></li>
                 <li id="client-space">
-                    <a href="/register">
-                        <img src="../image/icon/cadenas.png" alt="Cadenas" class="cadenas-icon" />
-                        Espace client
+                    <a id="client-space-href" href="/register">
+                        <img src="../image/icon/cadenas.png" alt="Cadenas" class="cadenas-icon" /> Espace client
                     </a>
                 </li>
+                <li id="logout" style="display: none;"><a href="/logout">Se déconnecter</a></li>
+
             </ul>
         </div>
     </div>
@@ -54,7 +55,7 @@
             </form>
         </div>
     </div>
-        <script src="../js/register.js"></script>
+    <script src="../js/register.js"></script>
 
 </body>
 
