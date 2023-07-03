@@ -598,7 +598,7 @@ app.get('/messages', (req, res) => {
     }
 
     messagesContent += `
-        <div class="message-container">
+        <div class="message">
         <div class="message-content ${messageClass}">${message.contenu}
         <div class="message-date">${message.date_envoi}</div></div>
         </div>
