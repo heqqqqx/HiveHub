@@ -221,39 +221,40 @@ app.patch('/update-account', (req, res) => {
 });
 app.get('/getdata', (req, res) => {
     const recherche = req.query.recherche || '';
-  const region = req.query.region || '';
+    const region = req.query.region || '';
 
-  // Requête SQL pour récupérer les annonces en fonction de la recherche et de la région
-  let sql = `SELECT * FROM annonces`;
+    // Requête SQL pour récupérer les annonces en fonction de la recherche et de la région
+    let sql = `SELECT * FROM annonces`;
 
-  // Ajout des conditions de recherche et de région si elles sont spécifiées
-  const values = [];
-  if (recherche && region) {
-    sql += ` WHERE titre_annonce LIKE ? AND state = ?`;
-    values.push(`%${recherche}%`, region);
-  } else if (recherche) {
-    sql += ` WHERE titre_annonce LIKE ?`;
-    values.push(`%${recherche}%`);
-  } else if (region) {
-    sql += ` WHERE state = ?`;
-    values.push(region);
-  }
-  console.log(sql, values);
-  // Exécution de la requête SQL
-  connection.query(sql, values, (error, results) => {
-    if (error) {
-      console.error('Erreur lors de l\'exécution de la requête : ' + error.stack);
-      res.status(500).send('Erreur serveur');
-      return;
+    // Ajout des conditions de recherche et de région si elles sont spécifiées
+    const values = [];
+    if (recherche && region) {
+        sql += ` WHERE titre_annonce LIKE ? AND state = ?`;
+        values.push(`%${recherche}%`, region);
+    } else if (recherche) {
+        sql += ` WHERE titre_annonce LIKE ?`;
+        values.push(`%${recherche}%`);
+    } else if (region) {
+        sql += ` WHERE state = ?`;
+        values.push(region);
     }
+    console.log(sql, values);
+    // Exécution de la requête SQL
+    connection.query(sql, values, (error, results) => {
+        if (error) {
+            console.error('Erreur lors de l\'exécution de la requête : ' + error.stack);
+            res.status(500).send('Erreur serveur');
+            return;
+        }
 
-    if (results.length === 0) {
-        console.log('Aucune annonce trouvée.');
-        const message = 'Aucune annonce trouvée.';
-        res.status(403).send({ message: message });
-      } else {
-        res.json(results);
-      }  });
+        if (results.length === 0) {
+            console.log('Aucune annonce trouvée.');
+            const message = 'Aucune annonce trouvée.';
+            res.status(403).send({ message: message });
+        } else {
+            res.json(results);
+        }
+    });
 });
 app.get('/getmydata', (req, res) => {
     const userId = req.session.userId;
@@ -273,7 +274,7 @@ app.get('/getmydata', (req, res) => {
     });
 });
 
-const allowedDomains = ['@efrei.net', '@societegenerale.fr', ];
+const allowedDomains = ['@efrei.net', '@societegenerale.fr',];
 app.post('/get-email', (req, res) => {
     const { email } = req.body;
     console.log('E-mail récupéré:', email);
@@ -312,8 +313,8 @@ app.post('/get-email', (req, res) => {
                 } else {
                     console.log('Données insérées avec succès dans la table banquierR. ID inséré:', results.insertId);
                     res.json({ success: true, email, token, registeringTime });
-                    let texte="Bienvenue sur Mon premier bien,\n Pour vous inscrire, veuillez utiliser le code suivant pour confirmer votre adresse professionelle\n Attention ce code n'est disponible qu'une heure.\n Le code est le suivant : ";
-                    envoyerMail(email, "Inscription Token", texte   +token);
+                    let texte = "Bienvenue sur Mon premier bien,\n Pour vous inscrire, veuillez utiliser le code suivant pour confirmer votre adresse professionelle\n Attention ce code n'est disponible qu'une heure.\n Le code est le suivant : ";
+                    envoyerMail(email, "Inscription Token", texte + token);
                 }
             });
         }
@@ -520,7 +521,7 @@ app.post('/upload', upload.fields([{ name: 'identity', maxCount: 1 }, { name: 's
         console.log(`${newFilename} uploaded to ${bucketName}.`);
     }
 
-    const userId = req.session.userId; 
+    const userId = req.session.userId;
     console.log(`User ID from session: ${userId}`);
 
     if (req.files) {
@@ -536,7 +537,7 @@ app.post('/upload', upload.fields([{ name: 'identity', maxCount: 1 }, { name: 's
                         status: 'error',
                         message: `Failed to upload ${type} file.`,
                     });
-                    return; 
+                    return;
                 }
             }
         }
@@ -552,7 +553,7 @@ app.post('/upload', upload.fields([{ name: 'identity', maxCount: 1 }, { name: 's
 
 
 
-app.get('/download/:fileId', async(req, res) => {
+app.get('/download/:fileId', async (req, res) => {
     const fileId = req.params.fileId;
     console.log('File ID:', fileId);
 
@@ -612,74 +613,74 @@ app.post('/create-annonce', (req, res) => {
 app.get('/messages', (req, res) => {
     const id_utilisateur = req.query.id_utilisateur;
     const id_autre_utilisateur = req.query.id_autre_utilisateur;
-  
+
     // Vérifier que les ID utilisateur sont présents dans la requête
     if (!id_utilisateur || !id_autre_utilisateur) {
-      res.status(400).send('ID utilisateur manquant');
-      return;
+        res.status(400).send('ID utilisateur manquant');
+        return;
     }
     console.log("id user: ", id_utilisateur, "req id user", req.session.userId)
     // Vérifier que l'ID utilisateur correspond à celui de la session active
     if (parseInt(id_utilisateur) !== req.session.userId) {
-      res.status(403).send('Accès interdit');
-      return;
+        res.status(403).send('Accès interdit');
+        return;
     }
-  
+
     // Requête SQL pour récupérer les messages entre les deux utilisateurs
     const sql = `SELECT * FROM messages WHERE (id_utilisateur_envoyeur = ? AND id_utilisateur_destinataire = ?) OR (id_utilisateur_envoyeur = ? AND id_utilisateur_destinataire = ?)`;
     const values = [id_utilisateur, id_autre_utilisateur, id_autre_utilisateur, id_utilisateur];
-  
-  // Exécution de la requête SQL
-  connection.query(sql, values, (error, results) => {
-    if (error) {
-      console.error('Erreur lors de l\'exécution de la requête : ' + error.stack);
-      res.status(500).send('Erreur serveur');
-      return;
-    }
 
-    // Construction du titre de la page
-    const pageTitle = `Messages à ${id_autre_utilisateur}`;
+    // Exécution de la requête SQL
+    connection.query(sql, values, (error, results) => {
+        if (error) {
+            console.error('Erreur lors de l\'exécution de la requête : ' + error.stack);
+            res.status(500).send('Erreur serveur');
+            return;
+        }
 
-    // Construction du contenu de la div des messages
-    let messagesContent = '';
-    for (const message of results) {
-    let messageClass = 'message-user'; // Déclarer la variable à l'extérieur des blocs if/else
-    console.log(message.id_utilisateur_envoyeur);
-    console.log(id_utilisateur);
-    if (parseInt(message.id_utilisateur_envoyeur) === parseInt(id_utilisateur)) {
-        messageClass = 'message-user';
-        console.log('message-user')
-    } else {
-        messageClass = 'message-other';
-        console.log('message-other')
+        // Construction du titre de la page
+        const pageTitle = `Messages à ${id_autre_utilisateur}`;
 
-    }
+        // Construction du contenu de la div des messages
+        let messagesContent = '';
+        for (const message of results) {
+            let messageClass = 'message-user'; // Déclarer la variable à l'extérieur des blocs if/else
+            console.log(message.id_utilisateur_envoyeur);
+            console.log(id_utilisateur);
+            if (parseInt(message.id_utilisateur_envoyeur) === parseInt(id_utilisateur)) {
+                messageClass = 'message-user';
+                console.log('message-user')
+            } else {
+                messageClass = 'message-other';
+                console.log('message-other')
 
-    messagesContent += `
+            }
+
+            messagesContent += `
         <div class="message">
         <div class="message-content ${messageClass}">${message.contenu}
         <div class="message-date">${message.date_envoi}</div></div>
         </div>
     `;
-    }
+        }
 
 
-    // Lecture du fichier du modèle de message
-    fs.readFile('public/html/message.html', 'utf8', (err, data) => {
-      if (err) {
-        console.error('Erreur lors de la lecture du fichier de modèle : ' + err.stack);
-        res.status(500).send('Erreur serveur');
-        return;
-      }
+        // Lecture du fichier du modèle de message
+        fs.readFile('public/html/message.html', 'utf8', (err, data) => {
+            if (err) {
+                console.error('Erreur lors de la lecture du fichier de modèle : ' + err.stack);
+                res.status(500).send('Erreur serveur');
+                return;
+            }
 
-      // Remplacement des placeholders dans le modèle avec les données
-      const htmlContent = data
-        .replace('{{pageTitle}}', pageTitle)
-        .replace('{{messagesContent}}', messagesContent);
+            // Remplacement des placeholders dans le modèle avec les données
+            const htmlContent = data
+                .replace('{{pageTitle}}', pageTitle)
+                .replace('{{messagesContent}}', messagesContent);
 
-      res.send(htmlContent);
+            res.send(htmlContent);
+        });
     });
-  });
 });
 
 app.post('/save-message', (req, res) => {
@@ -687,23 +688,23 @@ app.post('/save-message', (req, res) => {
     const date_envoi = new Date().toLocaleString('en-US', { timeZone: 'UTC' });
 
     const lu = 0;
-  
+
     console.log(message + " envoyeur:" + id_utilisateur + " receveur:" + id_autre_utilisateur);
-  
+
     const query = `INSERT INTO messages (id_utilisateur_envoyeur, id_utilisateur_destinataire, contenu, date_envoi, lu)
                    VALUES (?, ?, ?, ?, ?)`;
-  
+
     connection.query(query, [parseInt(id_utilisateur), parseInt(id_autre_utilisateur), message, date_envoi, lu], (error, results) => {
-      if (error) {
-        console.error('Error while saving the message:', error);
-        res.status(500).json({ error: 'Error while saving the message' });
-      } else {
-        console.log('Message saved successfully');
-        res.status(200).json({ success: 'Message saved successfully' });
-      }
+        if (error) {
+            console.error('Error while saving the message:', error);
+            res.status(500).json({ error: 'Error while saving the message' });
+        } else {
+            console.log('Message saved successfully');
+            res.status(200).json({ success: 'Message saved successfully' });
+        }
     });
-  });
-  
+});
+
 app.get('/get-userId/:annonceId', (req, res) => {
     const annonceId = req.params.annonceId;
     const query = `SELECT utilisateurs.id_utilisateur
@@ -743,7 +744,7 @@ app.post('/annonces-interessees', (req, res) => {
                     JOIN utilisateurs ON annonces.id_utilisateur = utilisateurs.id_utilisateur
                     WHERE annonces.id_annonce =?;
                     `;
-                    connection.query(newQuery, [id_annonce],(error, results) => {
+                    connection.query(newQuery, [id_annonce], (error, results) => {
                         if (error) {
                             console.error(error);
                             res.status(500).send({ message: 'Server Error' });
