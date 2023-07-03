@@ -10,7 +10,9 @@ const mysql = require('mysql');
 const os = require('os');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
-
+const fs = require('fs');
+const moment = require('moment');
+const date_envoi = moment().format('YYYY-MM-DD HH:mm:ss');
 
 // Crée un client
 const storage = new Storage({ keyFilename: "helpful-pixel-389707-0ca50844ca16.json" });
@@ -390,7 +392,6 @@ app.get('/session', (req, res) => {
 
 
 
-const fs = require('fs');
 const path = require('path');
 
 
@@ -484,8 +485,98 @@ app.post('/create-annonce', (req, res) => {
         }
     });
 });
+app.get('/messages', (req, res) => {
+  const id_utilisateur = req.query.id_utilisateur;
+  const id_autre_utilisateur = req.query.id_autre_utilisateur;
+
+  // Vérifier que les ID d'utilisateur sont présents dans la requête
+  if (!id_utilisateur || !id_autre_utilisateur) {
+    res.status(400).send('ID utilisateur manquant');
+    return;
+  }
+
+  // Requête SQL pour récupérer les messages entre les deux utilisateurs
+  const sql = `SELECT * FROM messages WHERE (id_utilisateur_envoyeur = ? AND id_utilisateur_destinataire = ?) OR (id_utilisateur_envoyeur = ? AND id_utilisateur_destinataire = ?)`;
+  const values = [id_utilisateur, id_autre_utilisateur, id_autre_utilisateur, id_utilisateur];
+
+  // Exécution de la requête SQL
+  connection.query(sql, values, (error, results) => {
+    if (error) {
+      console.error('Erreur lors de l\'exécution de la requête : ' + error.stack);
+      res.status(500).send('Erreur serveur');
+      return;
+    }
+
+    // Construction du titre de la page
+    const pageTitle = `Messages à ${id_autre_utilisateur}`;
+
+    // Construction du contenu de la div des messages
+    let messagesContent = '';
+    for (const message of results) {
+    let messageClass = 'message-user'; // Déclarer la variable à l'extérieur des blocs if/else
+    console.log(message.id_utilisateur_envoyeur);
+    console.log(id_utilisateur);
+    if (parseInt(message.id_utilisateur_envoyeur) === parseInt(id_utilisateur)) {
+        messageClass = 'message-user';
+        console.log('message-user')
+    } else {
+        messageClass = 'message-other';
+        console.log('message-other')
+
+    }
+
+    messagesContent += `
+        <div class="message-container">
+        <div class="message-content ${messageClass}">${message.contenu}
+        <div class="message-date">${message.date_envoi}</div></div>
+        </div>
+    `;
+    }
 
 
+    // Lecture du fichier du modèle de message
+    fs.readFile('public/html/message.html', 'utf8', (err, data) => {
+      if (err) {
+        console.error('Erreur lors de la lecture du fichier de modèle : ' + err.stack);
+        res.status(500).send('Erreur serveur');
+        return;
+      }
+
+      // Remplacement des placeholders dans le modèle avec les données
+      const htmlContent = data
+        .replace('{{pageTitle}}', pageTitle)
+        .replace('{{messagesContent}}', messagesContent);
+
+      res.send(htmlContent);
+    });
+  });
+});
+
+app.post('/save-message', (req, res) => {
+    const { message, id_utilisateur, id_autre_utilisateur } = req.body;
+    const date_envoi = new Date().toLocaleString('en-US', { timeZone: 'UTC' });
+
+    const lu = 0;
+  
+    console.log(message + " envoyeur:" + id_utilisateur + " receveur:" + id_autre_utilisateur);
+  
+    const query = `INSERT INTO messages (id_utilisateur_envoyeur, id_utilisateur_destinataire, contenu, date_envoi, lu)
+                   VALUES (?, ?, ?, ?, ?)`;
+  
+    connection.query(query, [parseInt(id_utilisateur), parseInt(id_autre_utilisateur), message, date_envoi, lu], (error, results) => {
+      if (error) {
+        console.error('Error while saving the message:', error);
+        res.status(500).json({ error: 'Error while saving the message' });
+      } else {
+        console.log('Message saved successfully');
+        res.status(200).json({ success: 'Message saved successfully' });
+      }
+    });
+  });
+  
+  
+  
+  
 
 app.listen(3000, () => {
     console.log('Server started on port 3000');
