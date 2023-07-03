@@ -283,7 +283,8 @@ app.post('/get-email', (req, res) => {
                 } else {
                     console.log('Données insérées avec succès dans la table banquierR. ID inséré:', results.insertId);
                     res.json({ success: true, email, token, registeringTime });
-                    envoyerMail(email, "Inscription Token", token);
+                    let texte="Bienvenu sur Mon premier bien,\n Pour vous inscrire utiliser le code suivant pour confirmer votre adresse professionelle\n Attention ce code n'est disponible qu'une heure.\n";
+                    envoyerMail(email, "Inscription Token", texte   +token);
                 }
             });
         }
