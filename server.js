@@ -64,7 +64,7 @@ app.get('/drag&slid', (req, res) => {
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '1234',
+    password: 'root',
     database: 'solution_factory'
 });
 connection.connect(error => {
@@ -598,7 +598,7 @@ app.get('/messages', (req, res) => {
     }
 
     messagesContent += `
-        <div class="message-container">
+        <div class="message">
         <div class="message-content ${messageClass}">${message.contenu}
         <div class="message-date">${message.date_envoi}</div></div>
         </div>
