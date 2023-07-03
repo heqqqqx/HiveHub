@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{pageTitle}}</title>
+  <link rel="stylesheet" href="../css/navbar.css">  
+  <style>
+    body {
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .message-container {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+    
+    .message-content {
+      background-color: #d9d9d9;
+      color: white;
+      padding: 10px;
+      border-radius: 10px;
+    }
+    
+    .message-user {
+      align-self: flex-end;
+      margin-left: 200px;
+      background-color: rgb(102, 102, 212);
+    }
+    
+    .message-other {
+      align-self: flex-start;
+      background-color: rgb(140, 35, 35);
+      
+    }
+    
+    .message-date {
+      margin-top: 5px;
+      font-size: 12px;
+      color: #888888;
+    }
+
+    .message-input-container {
+      position:fixed;
+      bottom: 0;
+     
+      align-items: center;
+      justify-content: flex-end;
+      height: 10%;
+      padding: 10px;
+      right: 0;
+    }
+    
+
+    .message-input {
+      width: 400px;
+      height: 40px;
+      padding: 5px;
+    }
+
+    .message-button {
+      height: 40px;
+      padding: 5px 15px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="navbar">
+    <div id="logo">
+        <a href="index.html">
+            <img src="../image/icon/hiveHub.png" alt="Logo de hiveHub" class="logo" />
+        </a>
+    </div>
+    <div id="nav-items">
+        <ul>
+            <li><a href="/index">Qui sommes-nous ?</a></li>
+            <li><a class="vertical_bar">|</a></li>
+            <li><a href="/">Emprunter</a></li>
+            <li><a class="vertical_bar">|</a></li>
+            <li id="client-space">
+                <a href="/register">
+                    <img src="../image/icon/cadenas.png" alt="Cadenas" class="cadenas-icon" />
+                    Espace client
+                </a>
+            </li>
+        </ul>
+    </div>
+  </div>
+  
+  <h1>{{pageTitle}}</h1>
+  
+  <div id="messages-container">
+    {{messagesContent}}
+  </div>
+
+  <div class="message-input-container">
+    <form id="message-form">
+      <input type="text" class="message-input" placeholder="Saisissez votre message">
+      <button type="submit" class="message-button">Envoyer</button>
+    </form>
+  </div>
+
+  <script>
+    function sendMessage(message) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id_utilisateur = urlParams.get('id_utilisateur');
+      const id_autre_utilisateur = urlParams.get('id_autre_utilisateur');
+      console.log(id_utilisateur + "  autre:" + id_autre_utilisateur);
+    
+      fetch('/save-message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: message,
+          id_utilisateur: id_utilisateur,
+          id_autre_utilisateur: id_autre_utilisateur
+        })
+      })
+        .then(response => {
+          if (response.ok) {
+            console.log('Message enregistré avec succès');
+          } else {
+            console.error("Erreur lors de l'enregistrement du message");
+          }
+        })
+        .catch(error => {
+          console.error('Erreur lors de la requête : ' + error);
+        });
+    }
+    
+    document.getElementById('message-form').addEventListener('submit', function (event) {
+      event.preventDefault(); // Empêche le rechargement de la page
+    
+      const messageInput = document.querySelector('.message-input');
+      const message = messageInput.value.trim();
+    
+      if (message) {
+        sendMessage(message);
+        messageInput.value = ''; // Efface le contenu de l'input après envoi
+        location.reload()
+      }
+    });
+    
+
+  </script>
+</body>
+</html>

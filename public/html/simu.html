@@ -13,6 +13,7 @@
             justify-content: center;
             margin-top: 20px;
             align-items: center;
+            margin: 0 auto;
         }
 
         .chart-item {
@@ -74,7 +75,6 @@
                 nextSection.querySelector(".form-group input, .form-group select").focus();
             }
         }
-        
         function submitForm() {
             var age = document.getElementById("age").value;
             var nbEnfants = document.getElementById("nb-enfants").value;
@@ -128,6 +128,11 @@
                     // Montant la dernière année
                     var lastYearChart = createChart(last_year + " €", "Montant la dernière année");
                     chartDiv.appendChild(lastYearChart);
+
+                    var taux = createChart(+ "4 %", "Taux d'intéret");
+                    chartDiv.appendChild(taux);
+
+                    
         
                     valuesDiv.appendChild(chartDiv);
                 }
@@ -140,6 +145,7 @@
             chart.innerHTML = "<span class='chart-value'>" + value + "</span><span class='chart-label'>" + label + "</span>";
             return chart;
         }
+        
         
     </script>
 </head>
