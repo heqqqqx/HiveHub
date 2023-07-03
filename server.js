@@ -507,7 +507,7 @@ app.post('/upload', upload.fields([{ name: 'identity', maxCount: 1 }, { name: 's
                         status: 'error',
                         message: `Failed to upload ${type} file.`,
                     });
-                    return; // important to prevent further execution in case of an error
+                    return; 
                 }
             }
         }
