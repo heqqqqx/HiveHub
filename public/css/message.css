@@ -1,0 +1,81 @@
+body {
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  #navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+  }
+  
+  #messages-container {
+    flex: 1;
+    overflow-y: scroll;
+    padding: 10px;
+    margin-bottom: 100px;
+  }
+  
+  .message-input-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 10%;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f5f5f5;
+    z-index: 1;
+  }
+  
+  .message-input {
+    flex: 1;
+    height: 40px;
+    width: 400px;
+    padding: 5px;
+  }
+
+  .message-button {
+    height: 40px;
+    padding: 5px 15px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  
+  .message {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  
+  .message-content {
+    background-color: #d9d9d9;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+  }
+  
+  .message-user {
+    align-self: flex-end;
+    margin-left: 200px;
+    background-color: rgb(102, 102, 212);
+  }
+  
+  .message-other {
+    align-self: flex-start;
+    background-color: rgb(140, 35, 35);
+  }
+  
+  .message-date {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #888888;
+  }
