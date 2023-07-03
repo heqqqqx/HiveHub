@@ -55,15 +55,15 @@ fetch('http://localhost:3000/session')
                         btn.addEventListener('click', (event) => {
                             const annonceId = data[event.target.dataset.index].id_annonce;
                             fetch(`http://localhost:3000/annonces-interessees`, {
-                                    method: 'DELETE',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        id_banquier: varbanquierId,
-                                        id_annonce: annonceId
-                                    })
+                                method: 'DELETE',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    id_banquier: varbanquierId,
+                                    id_annonce: annonceId
                                 })
+                            })
                                 .then(response => response.json())
                                 .then(data => {
                                     showPopup("Annonce supprimée des favoris", "error");
@@ -97,7 +97,7 @@ fetch('http://localhost:3000/session')
                                     <div class="attribut">
                                         <span class="attribut_label"><h3>Descriptions:</h3></span>
                                         <div class="editable-value" data-field="descriptions" data-type="annonce">${annonce.descriptions}</div>
-                                        <</div>
+                                        </div>
                                     <div class="attribut">
                                         <span class="attribut_label"><h3>Adresse:</h3></span>
                                         <div class="editable-value" data-field="address" data-type="annonce">${annonce.address}</div>
@@ -110,6 +110,7 @@ fetch('http://localhost:3000/session')
                                         <span class="attribut_label"><h3>Ville:</h3></span>
                                         <div class="editable-value" data-field="city" data-type="annonce">${annonce.city}</div>
                                         </div>
+                                    <button class="message-button" type="button" onclick="voirMessage">Voir message</button>
                                 `;
 
                                 rightDisplay.innerHTML = '';
@@ -141,15 +142,15 @@ fetch('http://localhost:3000/session')
 
                                         const annonceId = data[event.target.dataset.index].id_annonce;
                                         fetch(`/update-annonce/${fieldValue}/${annonceId}`, {
-                                                method: 'PATCH',
-                                                headers: {
-                                                    'Content-Type': 'application/json'
-                                                },
-                                                body: JSON.stringify({
-                                                    field: fieldValue,
-                                                    value: newValue
-                                                })
+                                            method: 'PATCH',
+                                            headers: {
+                                                'Content-Type': 'application/json'
+                                            },
+                                            body: JSON.stringify({
+                                                field: fieldValue,
+                                                value: newValue
                                             })
+                                        })
                                             .then(response => response.json())
                                             .then(data => {
                                                 console.log('Annonce mise à jour:', data);
@@ -229,14 +230,14 @@ fetch('http://localhost:3000/session')
                         btn.addEventListener('click', (event) => {
                             const annonceId = data[event.target.dataset.index].id_annonce;
                             fetch(`http://localhost:3000/delete-annonce/${annonceId}`, {
-                                    method: 'DELETE',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        id: annonceId
-                                    })
+                                method: 'DELETE',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    id: annonceId
                                 })
+                            })
                                 .then(response => response.json())
                                 .then(data => {
                                     showPopup("Annonce supprimée", "error");
@@ -330,15 +331,15 @@ fetch('http://localhost:3000/session')
                                         // Envoyer la requête de mise à jour à la base de données
                                         const annonceId = data[event.target.dataset.index].id_annonce;
                                         fetch(`/update-annonce/${fieldValue}/${annonceId}`, {
-                                                method: 'PATCH',
-                                                headers: {
-                                                    'Content-Type': 'application/json'
-                                                },
-                                                body: JSON.stringify({
-                                                    field: fieldValue,
-                                                    value: newValue
-                                                })
+                                            method: 'PATCH',
+                                            headers: {
+                                                'Content-Type': 'application/json'
+                                            },
+                                            body: JSON.stringify({
+                                                field: fieldValue,
+                                                value: newValue
                                             })
+                                        })
                                             .then(response => response.json())
                                             .then(data => {
                                                 console.log(newValue)
@@ -389,4 +390,28 @@ function showPopup(message, type) {
         console.log('Removing popup');
         popup.remove();
     }, 1000);
+}
+
+function voirMessage() {
+    let id_utilisateur = null;
+    let id_autre_utilisateur = null;
+    fetch('/session', {
+        method: 'GET',
+        credentials: 'include'
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.id_utilisateur) {
+                id_autre_utilisateur = data.id_utilisateur;
+            } else {
+                showPopup('Erreur', 'error');
+            }
+        }).catch((error) => {
+            console.error('Error:', error);
+        });
+
+    window.location.href = `/message?id_utilisateur=${id_utilisateur}&id_autre_utilisateur=${id_autre_utilisateur}`;
+    const annonceId = data[event.target.dataset.index].id_annonce;
+    
+
 }
