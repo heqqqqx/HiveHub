@@ -61,7 +61,7 @@ app.get('/registerPro', (req, res) => {
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'root',
+    password: '{Al37_Be36',
     database: 'solution_factory'
 });
 connection.connect(error => {
