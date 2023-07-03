@@ -1,44 +1,69 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Inscription Professionnels</title>
-  <link rel="stylesheet" href="../css/navbar.css">
-  <link rel="stylesheet" href="../css/register.css">
-</head>
-<body>
-  <div id="navbarre-placeholder"></div>
-  <script>
-    // Charger la barre de navigation
-    fetch('/html/navbar.html')
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('navbarre-placeholder').innerHTML = data;
-    });
-  </script>
-  <div class="form-container">
-    <div class="container">
-      <form id="register-form">
-        <div class="form-group input-fields">
-          <div class="row">
-            <input type="text" id="nom" name="nom" placeholder="Nom" required>
-            <input type="text" id="prenom" name="prenom" placeholder="Prénom" required>
-          </div>
-          <div class="row">
-            <input type="date" id="dateNaissance" name="datenaissance" placeholder="Date de Naissance" required>
-            <input type="text" id="ville" name="adresse" placeholder="Lieu de naissance" required>
-          </div>
-          <input id="email" type="email" name="email" placeholder="Email" required>
-          <input id="password" type="password" name="mot_de_passe" placeholder="Mot de passe" required>
-          <input id="confirm-pwd" type="password" placeholder="Confirmer le mot de passe" required>
-          <input id="token" type="text" name="token" placeholder="Token" required>
-        </div>
-        <div class="form-group submit-button">
-          <button type="submit">S'inscrire</button>
-        </div>
-      </form>
-    </div>
-  </div>
 
-  <script src="../js/registerPro.js"></script>
+<head>
+    <title>Inscription Professionnels</title>
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/register.css">
+</head>
+
+<body>
+    <div id="navbar">
+        <div id="logo">
+            <a href="/index">
+                <img src="../image/icon/hiveHub.png" alt="Logo de hiveHub" class="logo" />
+            </a>
+        </div>
+        <div id="nav-items">
+            <ul>
+                <li><a href="/index">Qui sommes-nous ?</a></li>
+                <li><a class="vertical_bar">|</a></li>
+                <li><a href="/createAnnonce">Emprunter</a></li>
+                <li><a class="vertical_bar">|</a></li>
+                <li id="client-space">
+                    <a id="client-space-href" href="/register">
+                        <img src="../image/icon/cadenas.png" alt="Cadenas" class="cadenas-icon" /> Espace client
+                    </a>
+                </li>
+                <li id="logout" style="display: none;"><a href="/logout">Se déconnecter</a></li>
+
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Charger la barre de navigation
+        fetch('/html/navbar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbarre-placeholder').innerHTML = data;
+            });
+    </script>
+    <div class="form-container">
+        <div class="container">
+            <form id="register-form">
+                <div class="form-group input-fields">
+                    <div class="row">
+                        <input type="text" id="nom" name="nom" placeholder="Nom" required>
+                        <input type="text" id="prenom" name="prenom" placeholder="Prénom" required>
+                    </div>
+                    <div class="row">
+                        <input type="date" id="dateNaissance" name="datenaissance" placeholder="Date de Naissance" required>
+                        <input type="text" id="ville" name="adresse" placeholder="Lieu de naissance" required>
+                    </div>
+                    <input id="email" type="email" name="email" placeholder="Email" required>
+                    <input id="password" type="password" name="mot_de_passe" placeholder="Mot de passe" required>
+                    <input id="confirm-pwd" type="password" placeholder="Confirmer le mot de passe" required>
+                    <input id="token" type="text" name="token" placeholder="Token" required>
+                </div>
+                <div class="form-group submit-button">
+                    <button type="submit">S'inscrire</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/registerPro.js"></script>
+    <script src="../js/main.js"></script>
 </body>
+
 </html>

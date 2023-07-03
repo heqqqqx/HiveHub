@@ -1,78 +1,105 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <link rel="stylesheet" href="../css/register.css">
-  <title>Formulaire</title>
+    <link rel="stylesheet" href="../css/navbar.css">
+    <title>Formulaire</title>
 </head>
+
 <body>
-    <div id="navbarre-placeholder"></div>
-  <script>
-    // Charger la barre de navigation
-    fetch('/html/navbar.html')
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('navbarre-placeholder').innerHTML = data;
-    });
-  </script>
-  <div class="form-container">
-    <div class="container">
-      <form id="emailForm" style="width: 100%";>
-        <div class="form-group input-fields">
-          
-            
-            <input type="email" id="email" name="email" placeholder="Professional email">
-          
+    <div id="navbar">
+        <div id="logo">
+            <a href="/index">
+                <img src="../image/icon/hiveHub.png" alt="Logo de hiveHub" class="logo" />
+            </a>
         </div>
-        <div class="form-group submit-button">
-          <button type="submit">Envoyer</button>
+        <div id="nav-items">
+            <ul>
+                <li><a href="/index">Qui sommes-nous ?</a></li>
+                <li><a class="vertical_bar">|</a></li>
+                <li><a href="/createAnnonce">Emprunter</a></li>
+                <li><a class="vertical_bar">|</a></li>
+                <li id="client-space">
+                    <a id="client-space-href" href="/register">
+                        <img src="../image/icon/cadenas.png" alt="Cadenas" class="cadenas-icon" /> Espace client
+                    </a>
+                </li>
+                <li id="logout" style="display: none;"><a href="/logout">Se déconnecter</a></li>
+
+            </ul>
         </div>
-      </form>
     </div>
-  </div>
+    <script>
+        // Charger la barre de navigation
+        fetch('/html/navbar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbarre-placeholder').innerHTML = data;
+            });
+    </script>
+    <div class="form-container">
+        <div class="container">
+            <form id="emailForm" style="width: 100%" ;>
+                <div class="form-group input-fields">
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('emailForm').addEventListener('submit', function(event) {
-          event.preventDefault();
-          
-          const email = document.getElementById('email').value;
-          const allowedDomains = ['@efrei.net', '@societegenerale.fr', '@gmail.com'];
-          let isValidDomain = false;
 
-          for (const domain of allowedDomains) {
-            if (email.endsWith(domain)) {
-              isValidDomain = true;
-              break;
-            }
-          }
+                    <input type="email" id="email" name="email" placeholder="Professional email">
 
-          if (!isValidDomain) {
-            alert('Invalid email domain');
-            return;
-          }
+                </div>
+                <div class="form-group submit-button">
+                    <button type="submit">Envoyer</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-          fetch('/get-email', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email }),
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              alert('Email sent with your inscription token ' + data.email);
-              window.location.replace('/registerPro')
-            } else {
-              alert('Failed to retrieve the email: ' + data.message);
-            }
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          });
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('emailForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const email = document.getElementById('email').value;
+                const allowedDomains = ['@efrei.net', '@societegenerale.fr', '@gmail.com'];
+                let isValidDomain = false;
+
+                for (const domain of allowedDomains) {
+                    if (email.endsWith(domain)) {
+                        isValidDomain = true;
+                        break;
+                    }
+                }
+
+                if (!isValidDomain) {
+                    alert('Invalid email domain');
+                    return;
+                }
+
+                fetch('/get-email', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Email sent with your inscription token ' + data.email);
+                            window.location.replace('/registerPro')
+                        } else {
+                            alert('Failed to retrieve the email: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
         });
-      });
-      
-  </script>
+    </script>
+    <script src="../js/main.js"></script>
 </body>
+
 </html>
