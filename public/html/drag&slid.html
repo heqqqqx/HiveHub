@@ -108,7 +108,6 @@
   selectedFiles.forEach((file, index) => {
     if (file) {
       console.log(`Adding file ${index} to form data.`);
-      
       formData.append(fieldNames[index], file);
     }
   });
@@ -126,6 +125,7 @@
     for (let id = 1; id <= 3; id++) {
       deleteFile(id);
     }
+    window.location.href="/dashboard"
   })
   .catch(error => {
     console.error('Error:', error);
