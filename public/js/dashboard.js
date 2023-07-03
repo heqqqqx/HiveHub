@@ -110,12 +110,42 @@ fetch('http://localhost:3000/session')
                                         <span class="attribut_label"><h3>Ville:</h3></span>
                                         <div class="editable-value" data-field="city" data-type="annonce">${annonce.city}</div>
                                         </div>
-                                    <button class="message-button" type="button" onclick="voirMessage">Voir message</button>
+                                    <button class="message-button" type="button">Voir message</button>
                                 `;
 
                                 rightDisplay.innerHTML = '';
                                 rightDisplay.appendChild(rightElement);
                                 rightPanel.classList.remove('hidden');
+                                rightElement.querySelectorAll('.message-button').forEach((messageButton) => {
+                                    messageButton.addEventListener('click', () => {
+                                        const annonceId = data[event.target.dataset.index].id_annonce;
+                                        let id_utilisateur = 0;
+                                        console.log("Fetching ID utilisateur");
+                                        fetch(`/get-userId/${annonceId}`, {
+                                            method: 'GET',
+                                            headers: {
+                                                'Content-Type': 'application/json'
+                                            }
+                                        })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.id_utilisateur) {
+                                                id_utilisateur = data.id_utilisateur;
+                                                console.log("id_utilisateur:", id_utilisateur);
+                                                window.location.href = `/messages?id_utilisateur=${varbanquierId}&id_autre_utilisateur=${id_utilisateur}`;
+                                            } else {
+                                                console.log("Erreur lors de la récupération de l'id utilisateur");
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error('Erreur lors de la récupération de l\'ID utilisateur:', error);
+                                        });
+                                    });
+                                });
+                                
+
+
+
 
                                 rightElement.querySelectorAll('.edit-button').forEach((editButton) => {
                                     const editableValue = editButton.parentNode.querySelector('.editable-value');
@@ -410,8 +440,5 @@ function voirMessage() {
             console.error('Error:', error);
         });
 
-    window.location.href = `/message?id_utilisateur=${id_utilisateur}&id_autre_utilisateur=${id_autre_utilisateur}`;
-    const annonceId = data[event.target.dataset.index].id_annonce;
-    
 
 }
