@@ -13,6 +13,8 @@ const crypto = require('crypto');
 const fs = require('fs');
 const moment = require('moment');
 const date_envoi = moment().format('YYYY-MM-DD HH:mm:ss');
+const archiver = require('archiver');
+
 
 // Crée un client
 const storage = new Storage({ keyFilename: "helpful-pixel-389707-0ca50844ca16.json" });
@@ -523,46 +525,31 @@ app.post('/upload', upload.fields([{ name: 'identity', maxCount: 1 }, { name: 's
 
 
 
-app.get('/download/:fileId', async(req, res) => {
-    const fileId = req.params.fileId;
-    console.log('File ID:', fileId);
+app.get('/download/:option/:userId', async (req, res) => {
+    const userId = req.params.userId;
+    const option = req.params.option;
 
-    const tmpDir = os.tmpdir();
-    console.log('Temp directory:', tmpDir);
-
-    console.log('Temp directory:', tmpDir);
-    console.log('File ID:', fileId);
-
-    const filePath = path.join(tmpDir, fileId);
-    console.log('File path:', filePath);
-
-    const destination = filePath;
-    const options = {
-        destination: destination,
-    };
+    // définir le nom du fichier en fonction du userId et de l'option
+    const fileName = `${option}-${userId}`;
 
     try {
-        await storage.bucket(bucketName).file(fileId).download(options);
-        console.log(`File ${fileId} downloaded to ${destination}`);
-        console.log('Check if file exists:', fs.existsSync(destination));
+        const file = storage
+            .bucket(bucketName)
+            .file(fileName)
+            .createReadStream();
+            
+        // Définir les en-têtes
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename=${fileName}.pdf`);
+
+        // Envoyer le fichier
+        file.pipe(res);
     } catch (error) {
-        console.error(`Error downloading file ${fileId}:`, error);
-        res.status(500).send('Error downloading file');
-        return;
+        console.error('Error downloading file:', error);
+        res.status(500).send({ status: 'error', message: 'Error downloading file.' });
     }
-
-    console.log(`Sending file ${fileId} to client...`);
-    console.log('Path to send file:', destination);
-
-    try {
-        res.download(destination);
-        console.log(`File ${fileId} sent to client`);
-    } catch (error) {
-        console.error(`Error sending file ${fileId} to client:`, error);
-        res.status(500).send('Error sending file to client');
-    }
-
 });
+
 
 
 
