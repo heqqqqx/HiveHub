@@ -1,34 +1,46 @@
-// tableau pour stocker les fichiers sélectionnés
 let selectedFiles = [];
 
-// gestionnaires d'événements pour chaque zone de dépôt
 function handleFileDrop1(event) {
   event.preventDefault();
-  selectedFiles.push(event.dataTransfer.files[0]);
+  const file = event.dataTransfer.files[0];
+  console.log('File dropped in zone 1: ', file);
+  selectedFiles.push(file);
+  console.log('Current selectedFiles: ', selectedFiles);
 }
 
 function handleFileDrop2(event) {
   event.preventDefault();
-  selectedFiles.push(event.dataTransfer.files[0]);
+  const file = event.dataTransfer.files[0];
+  console.log('File dropped in zone 2: ', file);
+  selectedFiles.push(file);
+  console.log('Current selectedFiles: ', selectedFiles);
 }
 
 function handleFileDrop3(event) {
   event.preventDefault();
-  selectedFiles.push(event.dataTransfer.files[0]);
+  const file = event.dataTransfer.files[0];
+  console.log('File dropped in zone 3: ', file);
+  selectedFiles.push(file);
+  console.log('Current selectedFiles: ', selectedFiles);
 }
 
-// gestionnaire d'événements pour le bouton d'envoi
-function uploadFiles() {
-  let formData = new FormData();
-  selectedFiles.forEach((file, index) => {
-    formData.append("file" + index, file);
-  });
 
+function uploadFiles() {
+  console.log('Uploading files...');
+  let formData = new FormData();
+  formData.append("identity", selectedFiles[0]);
+  formData.append("salary", selectedFiles[1]);
+  formData.append("sale", selectedFiles[2]);
+  
+  console.log('formData: ', formData); 
   fetch('/upload', {
     method: 'POST',
     body: formData
   })
-  .then(response => response.json())
+  .then(response => {
+    console.log('Response: ', response);
+    return response.json();
+  })
   .then(result => {
     console.log('Success:', result);
   })

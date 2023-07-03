@@ -64,7 +64,7 @@ app.get('/drag&slid', (req, res) => {
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '1234',
+    password: '{Al37_Be36',
     database: 'solution_factory'
 });
 connection.connect(error => {
@@ -193,6 +193,7 @@ app.post('/login', (req, res) => {
                 } else {
 
                     req.session.userId = results[0].id_utilisateur;
+                    console.log(req.session.userId);
 
                     res.status(200).send({ id: results[0].id_utilisateur, message: 'Logged in successfully' });
                 }
@@ -471,13 +472,15 @@ const path = require('path');
 
 const uploadDirectory = path.join(__dirname, 'upload');
 
-app.post('/upload', upload.array('file'), (req, res) => {
-    async function uploadFile(file, index) {
-        const newFilename = `fichier${index + 1}-23`;
+app.post('/upload', upload.fields([{ name: 'identity', maxCount: 1 }, { name: 'salary', maxCount: 1 }, { name: 'sale', maxCount: 1 }]), async (req, res) => {
+    async function uploadFile(file, type, userId) {
+        const newFilename = `${type}-${userId}`;
         const filePath = path.join(uploadDirectory, newFilename);
 
+        console.log(`Renaming file to: ${newFilename}`);
         await fs.promises.rename(file.path, filePath);
 
+        console.log(`Uploading file ${newFilename} to bucket...`);
         await storage.bucket(bucketName).upload(filePath, {
             gzip: true,
             metadata: {
@@ -488,16 +491,36 @@ app.post('/upload', upload.array('file'), (req, res) => {
         console.log(`${newFilename} uploaded to ${bucketName}.`);
     }
 
+    const userId = req.session.userId; 
+    console.log(`User ID from session: ${userId}`);
+
     if (req.files) {
-        for (const [index, file] of req.files.entries()) {
-            uploadFile(file, index).catch(console.error);
+        console.log('Files received: ', req.files);
+        for (const type of ['identity', 'salary', 'sale']) {
+            if (req.files[type]) {
+                console.log(`Processing file of type: ${type}`);
+                try {
+                    await uploadFile(req.files[type][0], type, userId);
+                } catch (error) {
+                    console.error(`Error uploading ${type} file:`, error);
+                    res.status(500).send({
+                        status: 'error',
+                        message: `Failed to upload ${type} file.`,
+                    });
+                    return; // important to prevent further execution in case of an error
+                }
+            }
         }
+    } else {
+        console.log('No files received.');
     }
 
     res.send({
         status: 'ok'
     });
 });
+
+
 
 
 app.get('/download/:fileId', async(req, res) => {
