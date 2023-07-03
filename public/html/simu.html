@@ -13,6 +13,7 @@
             justify-content: center;
             margin-top: 20px;
             align-items: center;
+            margin: 0 auto;
         }
 
         .chart-item {
@@ -39,6 +40,7 @@
         
     </style>
     <link rel="stylesheet" href="../css/register.css">
+    <link rel="stylesheet" href="../css/navbar.css">
     <script>
         function showNextInput(currentInputId, nextInputId) {
             var currentInput = document.getElementById(currentInputId);
@@ -73,7 +75,6 @@
                 nextSection.querySelector(".form-group input, .form-group select").focus();
             }
         }
-        
         function submitForm() {
             var age = document.getElementById("age").value;
             var nbEnfants = document.getElementById("nb-enfants").value;
@@ -127,6 +128,11 @@
                     // Montant la dernière année
                     var lastYearChart = createChart(last_year + " €", "Montant la dernière année");
                     chartDiv.appendChild(lastYearChart);
+
+                    var taux = createChart(+ "4 %", "Taux d'intéret");
+                    chartDiv.appendChild(taux);
+
+                    
         
                     valuesDiv.appendChild(chartDiv);
                 }
@@ -140,18 +146,33 @@
             return chart;
         }
         
+        
     </script>
 </head>
 <body>
     <div id="navbarre-placeholder"></div>
-  <script>
-    // Charger la barre de navigation
-    fetch('/html/navbar.html')
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('navbarre-placeholder').innerHTML = data;
-    });
-  </script>
+    <div id="navbar">
+        <div id="logo">
+            <a href="/index">
+                <img src="../image/icon/hiveHub.png" alt="Logo de hiveHub" class="logo" />
+            </a>
+        </div>
+        <div id="nav-items">
+            <ul>
+                <li><a href="/index">Qui sommes-nous ?</a></li>
+                <li><a class="vertical_bar">|</a></li>
+                <li><a href="/createAnnonce">Emprunter</a></li>
+                <li><a class="vertical_bar">|</a></li>
+                <li id="client-space">
+                    <a id="client-space-href" href="/register">
+                        <img src="../image/icon/cadenas.png" alt="Cadenas" class="cadenas-icon" /> Espace client
+                    </a>
+                </li>
+                <li id="logout" style="display: none;"><a href="/logout">Se déconnecter</a></li>
+
+            </ul>
+        </div>
+    </div>
   <div class="form-container">
     <div class="container">
         <form id="prêt-form">
@@ -236,6 +257,6 @@
     </div>
 </div>
 <div  id="values"></div>
-
+<script src="../js/main.js"></script>
 </body>
 </html>
