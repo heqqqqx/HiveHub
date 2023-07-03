@@ -39,6 +39,7 @@
         
     </style>
     <link rel="stylesheet" href="../css/register.css">
+    <link rel="stylesheet" href="../css/navbar.css">
     <script>
         function showNextInput(currentInputId, nextInputId) {
             var currentInput = document.getElementById(currentInputId);
@@ -144,14 +145,28 @@
 </head>
 <body>
     <div id="navbarre-placeholder"></div>
-  <script>
-    // Charger la barre de navigation
-    fetch('/html/navbar.html')
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('navbarre-placeholder').innerHTML = data;
-    });
-  </script>
+    <div id="navbar">
+        <div id="logo">
+            <a href="/index">
+                <img src="../image/icon/hiveHub.png" alt="Logo de hiveHub" class="logo" />
+            </a>
+        </div>
+        <div id="nav-items">
+            <ul>
+                <li><a href="/index">Qui sommes-nous ?</a></li>
+                <li><a class="vertical_bar">|</a></li>
+                <li><a href="/createAnnonce">Emprunter</a></li>
+                <li><a class="vertical_bar">|</a></li>
+                <li id="client-space">
+                    <a id="client-space-href" href="/register">
+                        <img src="../image/icon/cadenas.png" alt="Cadenas" class="cadenas-icon" /> Espace client
+                    </a>
+                </li>
+                <li id="logout" style="display: none;"><a href="/logout">Se déconnecter</a></li>
+
+            </ul>
+        </div>
+    </div>
   <div class="form-container">
     <div class="container">
         <form id="prêt-form">
@@ -236,6 +251,6 @@
     </div>
 </div>
 <div  id="values"></div>
-
+<script src="../js/main.js"></script>
 </body>
 </html>
