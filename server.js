@@ -64,7 +64,7 @@ app.get('/drag&slid', (req, res) => {
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '{Al37_Be36',
+    password: '1234',
     database: 'solution_factory'
 });
 connection.connect(error => {
@@ -664,12 +664,29 @@ app.post('/annonces-interessees', (req, res) => {
                     console.error(error);
                     res.status(500).send({ message: 'Server Error' });
                 } else {
+                    const newQuery = `SELECT utilisateurs.email
+                    FROM annonces
+                    JOIN utilisateurs ON annonces.id_utilisateur = utilisateurs.id_utilisateur
+                    WHERE annonces.id_annonce =?;
+                    `;
+                    connection.query(newQuery, [id_annonce],(error, results) => {
+                        if (error) {
+                            console.error(error);
+                            res.status(500).send({ message: 'Server Error' });
+                        } else {
+                            console.log("mail: ", results);
+                            const email = results[0].email;
+                            console.log(email);
+                            envoyerMail(email, "Du nouveau pour ton annonce", "Votre annonce a été marquée comme intéressée par un banquier. Vous pouvez le contacter depuis notre site.");
+                        }
+                    });
                     res.status(200).send({ message: 'Annonce marquée comme intéressée' });
                 }
             });
         }
     });
 });
+
 app.delete('/annonces-interessees', (req, res) => {
     const { id_banquier, id_annonce } = req.body;
     const query = 'DELETE FROM Annonces_Interessees WHERE id_banquier = ? AND id_annonce = ?';
