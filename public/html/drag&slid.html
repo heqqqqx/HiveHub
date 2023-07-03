@@ -29,10 +29,11 @@
             </ul>
         </div>
     </div>Déposez vos fichiers ici</h2>
-
-    <input type="file" id="file_input1" style="display: none;" onchange="handleFileSelect(event, 1)">
-    <input type="file" id="file_input2" style="display: none;" onchange="handleFileSelect(event, 2)">
-    <input type="file" id="file_input3" style="display: none;" onchange="handleFileSelect(event, 3)">
+    
+    <input type="file" id="file_input1" name="identity" style="display: none;" onchange="handleFileSelect(event, 1)">
+    <input type="file" id="file_input2" name="salary" style="display: none;" onchange="handleFileSelect(event, 2)">
+    <input type="file" id="file_input3" name="sale" style="display: none;" onchange="handleFileSelect(event, 3)">
+    
     
     <div id="drop_zone1" onclick="handleClick(1)" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event, 1)">
         <p onclick="handleClick(1)">Pièce d'identité :</p>
@@ -99,33 +100,38 @@
         }
 
         function uploadFiles() {
-            console.log('Uploading files...');
-            let formData = new FormData();
-            selectedFiles.forEach((file, index) => {
-                if (file) {
-                    console.log(`Adding file ${index} to form data.`);
-                    formData.append("file", file);
-                }
-            });
+  console.log('Uploading files...');
+  let formData = new FormData();
+  
+  let fieldNames = ["identity", "salary", "sale"];
+  
+  selectedFiles.forEach((file, index) => {
+    if (file) {
+      console.log(`Adding file ${index} to form data.`);
+      
+      formData.append(fieldNames[index], file);
+    }
+  });
 
-            fetch('/upload', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => {
-                    console.log('Response received:', response);
-                    return response.json();
-                })
-                .then(result => {
-                    console.log('Success:', result);
-                    for (let id = 1; id <= 3; id++) {
-                        deleteFile(id);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
+  fetch('/upload', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => {
+    console.log('Response received:', response);
+    return response.json();
+  })
+  .then(result => {
+    console.log('Success:', result);
+    for (let id = 1; id <= 3; id++) {
+      deleteFile(id);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
+
 
         
     </script>
