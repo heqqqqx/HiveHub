@@ -703,7 +703,7 @@ app.post('/annonces-interessees', (req, res) => {
                     console.error(error);
                     res.status(500).send({ message: 'Server Error' });
                 } else {
-                    const newQuery = `SELECT utilisateurs.email
+                    const newQuery = `SELECT utilisateurs.email, utilisateurs.id_utilisateur
                     FROM annonces
                     JOIN utilisateurs ON annonces.id_utilisateur = utilisateurs.id_utilisateur
                     WHERE annonces.id_annonce =?;
@@ -716,7 +716,9 @@ app.post('/annonces-interessees', (req, res) => {
                             console.log("mail: ", results);
                             const email = results[0].email;
                             console.log(email);
-                            envoyerMail(email, "Du nouveau pour ton annonce", "Votre annonce a été marquée comme intéressée par un banquier. Vous pouvez le contacter depuis notre site.");
+                            console.log(results)
+                            const id = results[0].id_utilisateur;
+                            envoyerMail(email, "Du nouveau pour ton annonce", `Votre annonce a été marquée comme intéressée par un banquier. Vous pouvez le contacter à partir du lien suivant : http://localhost:3000/messages?id_utilisateur=${id}&id_autre_utilisateur=${id_banquier}`);
                         }
                     });
                     res.status(200).send({ message: 'Annonce marquée comme intéressée' });
