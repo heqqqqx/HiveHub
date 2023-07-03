@@ -88,11 +88,11 @@ fetch('http://localhost:3000/session')
 
                                 rightElement.innerHTML = `
                                     <div class="attribut">
-                                        <span class="attribut_label"><h3>Prix du bien:</h3></span>
+                                        <span class="attribut_label"><h3>Prix du bien (€):</h3></span>
                                         <div class="editable-value" data-field="prix_bien" data-type="annonce">${annonce.prix_bien}</div>
                                         </div>
                                     <div class="attribut">
-                                        <span class="attribut_label"><h3>Surface:</h3></span>
+                                        <span class="attribut_label"><h3>Surface (m²):</h3></span>
                                         <div class="editable-value" data-field="surface" data-type="annonce">${annonce.surface}</div>
                                         </div>
                                     <div class="attribut">
@@ -111,7 +111,8 @@ fetch('http://localhost:3000/session')
                                         <span class="attribut_label"><h3>Ville:</h3></span>
                                         <div class="editable-value" data-field="city" data-type="annonce">${annonce.city}</div>
                                         </div>
-                                    <button class="message-button" type="button">Voir message</button>
+                                    <br>
+                                    <button class="message-button" type="button">Envoyer un message au client</button> <br><br>
                                     <button class="download" data-annonce-id="${annonce.id_annonce}">Télécharger les fichiers</button>
                                     `;
 
@@ -297,13 +298,13 @@ fetch('http://localhost:3000/session')
 
                                 rightElement.innerHTML = `
             <div class="attribut">
-              <span class="attribut_label"><h3>Prix du bien:</h3></span>
+              <span class="attribut_label"><h3>Prix du bien (€):</h3></span>
               <div class="editable-value" data-field="prix_bien" data-type="annonce">${annonce.prix_bien}</div>
               <button class="edit-button">Modifier</button>
               <button class="save-button" style="display: none;">Enregistrer</button>
             </div>
             <div class="attribut">
-              <span class="attribut_label"><h3>Surface:</h3></span>
+              <span class="attribut_label"><h3>Surface (m²):</h3></span>
               <div class="editable-value" data-field="surface" data-type="annonce">${annonce.surface}</div>
               <button class="edit-button">Modifier</button>
               <button class="save-button" style="display: none;">Enregistrer</button>

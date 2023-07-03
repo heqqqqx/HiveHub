@@ -102,11 +102,11 @@ fetch('http://localhost:3000/getdata')
 
             rightElement.innerHTML = `
               <div class="attribut">
-                <span class="attribut_label"><h3>Prix du bien:</h3></span>
+                <span class="attribut_label"><h3>Prix du bien (€):</h3></span>
                 <span class="prix_bien">${annonce.prix_bien}</span>
               </div>
               <div class="attribut">
-                <span class="attribut_label"><h3>Surface:</h3></span>
+                <span class="attribut_label"><h3>Surface (m²):</h3></span>
                 <span class="surface">${annonce.surface}</span>
               </div>
               <div class="attribut">
