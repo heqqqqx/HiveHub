@@ -25,9 +25,9 @@ function showPopup(message, type) {
 
 
 fetch('/session', {
-        method: 'GET',
-        credentials: 'include' // include cookies with the request
-    })
+    method: 'GET',
+    credentials: 'include' // include cookies with the request
+})
     .then(response => response.json())
     .then(data => {
         varbanquierId = data.id_utilisateur; // Récupérer le banquierId
@@ -124,12 +124,12 @@ fetch('http://localhost:3000/getdata')
                         console.log('annonceId:', annonceId);
                         console.log('banquierId:', banquierId);
                         fetch('/annonces-interessees', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({ id_banquier: varbanquierId, id_annonce: annonceId })
-                            })
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ id_banquier: varbanquierId, id_annonce: annonceId })
+                        })
                             .then(response => response.json())
                             .then(data => {
 
