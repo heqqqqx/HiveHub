@@ -28,6 +28,7 @@ app.use(express.static('public'));
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/html/index.html');
 });
+
 app.get('/createAnnonce', (req, res) => {
     res.sendFile(__dirname + '/public/html/createAnnonce.html');
 });
@@ -58,7 +59,7 @@ app.get('/registerPro', (req, res) => {
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '1234',
+    password: 'root',
     database: 'solution_factory'
 });
 connection.connect(error => {
@@ -396,10 +397,66 @@ app.get('/session', (req, res) => {
     });
 });
 
+app.patch('/update-annonce/:type/:id', (req, res) => {
+    const annonceId = req.params.id;
+    const type = req.params.type;
+    const { value } = req.body;
+    console.log("req body : ", req.body);
+    // Utilisez la valeur du paramètre "type" pour déterminer quelle colonne mettre à jour
+    let columnName;
+    switch (type) {
+        case 'prix_bien':
+            columnName = 'prix_bien';
+            break;
+        case 'surface':
+            columnName = 'surface';
+            break;
+        case 'descriptions':
+            columnName = 'descriptions';
+            break;
+        case 'address':
+            columnName = 'address';
+            break;
+        case 'zip_code':
+            columnName = 'zip_code';
+            break;
+        case 'city':
+            columnName = 'city';
+            break;
+        default:
+            return res.status(400).send({ message: 'Type invalide' });
+    }
+
+    const query = `UPDATE Annonces SET ${columnName} = ? WHERE id_annonce = ?`;
+    connection.query(query, [value, annonceId], (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server Error' });
+        } else {
+            console.log('Annonce mise à jour:', results);
+            res.status(200).send({ message: 'Annonce mise à jour avec succès' });
+        }
+    });
+});
+
+
+app.delete('/delete-annonce/:id', (req, res) => {
+    const annonceId = req.params.id;
+    const query = `DELETE FROM Annonces WHERE id_annonce = ?`;
+    connection.query(query, [annonceId], (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server Error' });
+        } else {
+            console.log('Annonce mise à jour:', results);
+            res.status(200).send({ message: 'Annonce mise à jour avec succès' });
+        }
+    });
+});
+
 
 
 app.get('/dashboard', (req, res) => {
-    const userId = req.session.userId;
     res.sendFile(__dirname + '/public/html/dashboard.html');
 });
 
@@ -496,25 +553,74 @@ app.post('/create-annonce', (req, res) => {
     });
 });
 
+app.post('/annonces-interessees', (req, res) => {
+    const { id_banquier, id_annonce } = req.body;
 
-// app.get('/check_annonces', (req, res) => {
-//     const userId = req.session.userId;
-//     const sql = 'SELECT * FROM Annonces WHERE id_utilisateur = ?';
-//     connection.query(sql, [userId], (error, results) => {
-//         if (error) {
-//             console.error(error);
-//             res.status(500).send({ message: 'User alreadycreated an annonce' });
-//         } else if (results.length === 0) {
-//             res.status(200).send({});
-//         } else {
-//             const user = results[0];
-//             const { id_utilisateur, titre_annonce, prix_bien, surface, descriptions, date_annonce, zip_code, city, state, address } = user;
-//             res.status(200).send({ id_utilisateur, titre_annonce, prix_bien, surface, descriptions, date_annonce, zip_code, city, state, address });
-//         }
-//     });
-// });
+    const queryCheck = 'SELECT * FROM Annonces_Interessees WHERE id_banquier = ? AND id_annonce = ?';
+    connection.query(queryCheck, [id_banquier, id_annonce], (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server Error' });
+        } else if (results.length > 0) {
+            res.status(400).send({ message: 'Annonce déjà marquée comme intéressée' });
+        } else {
+            const queryInsert = 'INSERT INTO Annonces_Interessees (id_banquier, id_annonce) VALUES (?, ?)';
+            connection.query(queryInsert, [id_banquier, id_annonce], (error, results) => {
+                if (error) {
+                    console.error(error);
+                    res.status(500).send({ message: 'Server Error' });
+                } else {
+                    res.status(200).send({ message: 'Annonce marquée comme intéressée' });
+                }
+            });
+        }
+    });
+});
+app.delete('/annonces-interessees', (req, res) => {
+    const { id_banquier, id_annonce } = req.body;
+    const query = 'DELETE FROM Annonces_Interessees WHERE id_banquier = ? AND id_annonce = ?';
+    connection.query(query, [id_banquier, id_annonce], (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server Error' });
+        } else {
+            res.status(200).send({ message: 'Annonce supprimée des annonces intéressées' });
+        }
+    });
+});
+app.get('/annonces-interessees/:id_banquier', (req, res) => {
+    const id_banquier = req.params.id_banquier;
 
+    const query = `
+        SELECT annonces.*
+        FROM Annonces_Interessees
+        INNER JOIN annonces ON Annonces_Interessees.id_annonce = annonces.id_annonce
+        WHERE Annonces_Interessees.id_banquier = ?
+    `;
+    connection.query(query, [id_banquier], (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server Error' });
+        } else {
+            res.status(200).send(results);
+        }
+    });
+});
 
+app.get('/checkinteresses/:annonceId', (req, res) => {
+    const annonceId = req.params.annonceId;
+
+    const query = 'SELECT COUNT(*) AS count FROM Annonces_Interessees WHERE id_annonce = ?';
+    connection.query(query, [annonceId], (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server Error' });
+        } else {
+            const count = results[0].count;
+            res.status(200).send({ count });
+        }
+    });
+});
 app.listen(3000, () => {
     console.log('Server started on port 3000');
 });

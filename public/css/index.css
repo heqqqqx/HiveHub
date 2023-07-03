@@ -2,35 +2,100 @@ body {
     font-family: sourcesanspro, Arial, Helvetica, sans-serif;
     margin: 0px;
     background-image: url(../image/background-image-2.png);
-    background-repeat: no-repeat;
+    background-repeat: repeat-x;
 }
+
+.ponctuation {
+    color: #ff914d;
+}
+
+#main-content {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+
+/* Styles pour les écrans jusqu'à 768px de large */
+
+@media (max-width: 768px) {
+    .our_service_area .left_service {
+        width: 100%;
+        float: none;
+        background: none;
+    }
+    .our_service_area .left_service .left_service_inner {
+        max-width: 100%;
+        float: none;
+        padding: 0;
+        margin: 0 auto;
+    }
+    .our_service_area .right_service {
+        width: 100%;
+        float: none;
+        margin-top: 30px;
+    }
+    .our_service_area .right_service_text {
+        max-width: 100%;
+        margin-left: 0;
+        padding-top: 30px;
+    }
+}
+
+
+/* Styles pour les écrans de 769px à 1024px de large */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .our_service_area .left_service .left_service_inner .service_item {
+        width: calc(50% - 10px);
+        height: calc(50% - 10px);
+        box-sizing: border-box;
+        padding-right: 15px;
+        padding-bottom: 15px;
+    }
+    .our_service_area .right_service_text {
+        padding-top: 60px;
+    }
+}
+
+
+/* Styles pour les écrans de 1025px et plus */
+
+@media (min-width: 1025px) {
+    .our_service_area .left_service {
+        width: calc(50% + 80px);
+        float: left;
+        overflow: hidden;
+        background: url(../image/service-bg.jpg) no-repeat scroll center center;
+        background-size: cover;
+    }
+    .our_service_area .left_service .left_service_inner {
+        max-width: 635px;
+        float: right;
+        padding-right: 65px;
+        margin: 65px 0px;
+    }
+    .our_service_area .right_service {
+        width: calc(50% - 80px);
+        float: right;
+        overflow: hidden;
+    }
+    .right_service_text {
+        max-width: 380px;
+        margin-left: 30px;
+    }
+}
+
+
+/* Styles communs pour tous les écrans */
 
 .our_service_area {
     background: #1e2126;
     overflow: hidden;
     clear: both;
-}
-
-.our_service_area .left_service {
-    width: calc(50% + 80px);
-    float: left;
-    overflow: hidden;
-    background: url(../image/service-bg.jpg) no-repeat scroll center center;
-    background-size: cover;
-}
-
-h1 {
-    font-size: 40px;
-    color: #ffffff;
-    margin: 0px;
-    margin-bottom: 50px;
-}
-
-.our_service_area .left_service .left_service_inner {
-    max-width: 635px;
-    float: right;
-    padding-right: 65px;
-    margin: 65px 0px;
 }
 
 .our_service_area .left_service .left_service_inner .service_item {
@@ -49,26 +114,15 @@ h1 {
     padding: 35px 20px 30px 20px;
     text-align: center;
     border-top: 3px solid #ff914d;
-    -webkit-transition: all 400ms linear 0s;
-    -o-transition: all 400ms linear 0s;
     transition: all 400ms linear 0s;
 }
 
-.our_service_area .left_service .left_service_inner .service_item :hover {
-    background: #ff914d;
-    -webkit-transition: all 400ms linear 0s;
-    -o-transition: all 30ms linear 0s;
-    transition: all 400ms linear 0s;
-}
-
-.our_service_area .left_service .left_service_inner .service_item .service_item_inner :hover {
+.our_service_area .left_service .left_service_inner .service_item .service_item_inner:hover {
     background: #ff914d;
 }
 
 .our_service_area .left_service .left_service_inner .service_item .service_item_inner .service_icon img {
     opacity: 1;
-    -webkit-transition: all 400ms linear 0s;
-    -o-transition: all 400ms linear 0s;
     transition: all 400ms linear 0s;
     height: 48px;
     width: 48px;
@@ -81,6 +135,7 @@ h1 {
 }
 
 .main .main-content .main-text h1 {
+    color: #ffffff;
     font-weight: bold;
     text-transform: uppercase;
     padding: 13px 0px 8px 0px;
@@ -96,13 +151,7 @@ h1 {
     padding: 13px 0px 8px 0px;
 }
 
-.our_service_area .right_service {
-    width: calc(50% - 80px);
-    float: right;
-    overflow: hidden;
-}
-
-.main_b_title h2 {
+.our_service_area .right_service_text .main_b_title h2 {
     font-size: 40px;
     font-family: "PT Sans", sans-serif;
     color: #e8e8e8;
@@ -112,11 +161,7 @@ h1 {
     z-index: 2;
 }
 
-.secondary_b_title {
-    color: #ff914d;
-}
-
-.main_b_title h6 {
+.our_service_area .right_service_text .main_b_title h6 {
     font-size: 15px;
     font-family: "PT Sans", sans-serif;
     color: #ff914d;
@@ -125,48 +170,55 @@ h1 {
     text-transform: uppercase;
 }
 
-.our_service_area .right_service .right_service_text {
-    max-width: 380px;
-    margin-left: 95px;
-    padding-top: 100px;
-}
-
-.main_b_title h2:before {
-    content: "";
-    width: 170px;
-    height: 100px;
-    border: 6px solid #292c31;
-    position: absolute;
-    left: 47px;
-    bottom: 10px;
-    z-index: -1;
-}
-
-.border_bar {
+.our_service_area .right_service_text .border_bar {
     height: 1px;
     background: #ff914d;
     width: 100%;
     margin-top: 70px;
 }
 
-#main-content {
-    display: flex;
-    justify-content: space-between;
-    padding-left: 50px;
-    padding-right: 50px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-}
-
-#main-text {
-    font-size: 40px;
-}
-
-#main-image {
-    width: 50%;
-    height: 50%;
-}
-
-p {
-    margin-top: 1px;
+@media (max-width: 759px) {
+    body {
+        background-color: #1e2126;
+    }
+    .our_service_area .left_service {
+        background: none;
+        overflow: hidden;
+    }
+    .our_service_area .left_service .left_service_inner {
+        max-width: 100%;
+        float: none;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+    .our_service_area .left_service .left_service_inner .service_item {
+        width: 100%;
+        padding-right: 0;
+        padding-bottom: 25px;
+    }
+    .our_service_area .right_service {
+        width: 100%;
+        float: none;
+        overflow: hidden;
+    }
+    .our_service_area .right_service_text {
+        max-width: 100%;
+        margin-left: 0;
+        padding-top: 70px;
+    }
+    .main_b_title h2:before {
+        display: none;
+    }
+    .border_bar {
+        margin-top: 50px;
+    }
+    #main-content {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 20px;
+    }
+    #main-text {
+        text-align: center;
+        margin-bottom: 20px;
+    }
 }

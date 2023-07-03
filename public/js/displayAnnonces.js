@@ -1,36 +1,40 @@
+var varbanquierId;
+
+function showPopup(message, type) {
+    console.log('Showing popup:', message, type);
+
+    const popup = document.createElement('div');
+    popup.classList.add('popup', type);
+    popup.textContent = message;
+
+    popup.style.position = 'fixed';
+    popup.style.right = '20px';
+    popup.style.top = '20px';
+    popup.style.backgroundColor = type === 'error' ? 'red' : 'green';
+    popup.style.color = 'white';
+    popup.style.padding = '20px';
+    popup.style.borderRadius = '5px';
+
+    document.body.appendChild(popup);
+
+    setTimeout(() => {
+        console.log('Removing popup');
+        popup.remove();
+    }, 1000);
+}
+
+
 fetch('/session', {
         method: 'GET',
         credentials: 'include' // include cookies with the request
     })
     .then(response => response.json())
     .then(data => {
+        varbanquierId = data.id_utilisateur; // Récupérer le banquierId
+        console.log('banquierId:', varbanquierId);
         if (data.type_utilisateur != 'banquier') {
             console.log('Redirecting to index.html');
             window.location.href = '/index';
-
-            function showPopup(message, type) {
-                console.log('Showing popup:', message, type);
-
-                const popup = document.createElement('div');
-                popup.classList.add('popup', type);
-                popup.textContent = message;
-
-                popup.style.position = 'fixed';
-                popup.style.right = '20px';
-                popup.style.top = '20px';
-                popup.style.backgroundColor = type === 'error' ? 'red' : 'green';
-                popup.style.color = 'white';
-                popup.style.padding = '20px';
-                popup.style.borderRadius = '5px';
-
-                document.body.appendChild(popup);
-
-                setTimeout(() => {
-                    console.log('Removing popup');
-                    popup.remove();
-                }, 1000);
-            }
-            showPopup('Vous n\'avez pas accès à cette page', 'error');
         }
     })
     .catch((error) => {
@@ -89,28 +93,58 @@ fetch('http://localhost:3000/getdata')
                     const rightElement = document.createElement('div');
 
                     rightElement.innerHTML = `
-                        <div class="attribut">
-                            <span class="attribut_label"><h3>Prix du bien:</h3></span>
-                            <span class="prix_bien">${annonce.prix_bien}</span>
-                        </div>
-                        <div class="attribut">
-                            <span class="attribut_label"><h3>Surface:</h3></span>
-                            <span class="surface">${annonce.surface}</span>
-                        </div>
-                        <div class="attribut">
-                            <span class="attribut_label"><h3>Descriptions:</h3></span>
-                            <span class="descriptions">${annonce.descriptions}</span>
-                        </div>
-                        
-                        <div class="attribut">
-                            <span class="attribut_label"><h3>Addresse:</h3></span>
-                            <span class="address">${annonce.address}, ${annonce.zip_code}, ${annonce.city}</span>
-                        </div>
-                    `;
+    <div class="attribut">
+        <span class="attribut_label"><h3>Prix du bien:</h3></span>
+        <span class="prix_bien">${annonce.prix_bien}</span>
+    </div>
+    <div class="attribut">
+        <span class="attribut_label"><h3>Surface:</h3></span>
+        <span class="surface">${annonce.surface}</span>
+    </div>
+    <div class="attribut">
+        <span class="attribut_label"><h3>Descriptions:</h3></span>
+        <span class="descriptions">${annonce.descriptions}</span>
+    </div>
+    <div class="attribut">
+        <span class="attribut_label"><h3>Adresse:</h3></span>
+        <span class="address">${annonce.address}, ${annonce.zip_code}, ${annonce.city}</span>
+    </div>
+    <button class="mark-interested-btn" data-id="${annonce.id_annonce}">Marqué comme intéressé</button>
+`;
+
 
                     rightDisplay.innerHTML = '';
                     rightDisplay.appendChild(rightElement);
                     rightPanel.classList.remove('hidden');
+
+                    const markInterestedBtn = document.querySelector('.mark-interested-btn');
+                    markInterestedBtn.addEventListener('click', () => {
+                        const annonceId = markInterestedBtn.dataset.id;
+                        const banquierId = varbanquierId;
+                        console.log('annonceId:', annonceId);
+                        console.log('banquierId:', banquierId);
+                        fetch('/annonces-interessees', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ id_banquier: varbanquierId, id_annonce: annonceId })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+
+                                if (data.status == 200) {
+                                    showPopup(data.message, 'success');
+                                } else {
+                                    showPopup(data.message, 'error');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                showPopup('Une erreur s\'est produite lors de la marquage comme intéressé.', 'error');
+                            });
+                    });
+
                 } else {
                     event.target.innerText = "Voir plus";
                     rightDisplay.innerHTML = '';
