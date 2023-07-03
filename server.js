@@ -64,7 +64,7 @@ app.get('/drag&slid', (req, res) => {
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '1234',
+    password: 'root',
     database: 'solution_factory'
 });
 connection.connect(error => {
@@ -646,7 +646,23 @@ app.post('/save-message', (req, res) => {
     });
   });
   
-
+app.get('/get-userId/:annonceId', (req, res) => {
+    const annonceId = req.params.annonceId;
+    const query = `SELECT utilisateurs.id_utilisateur
+    FROM annonces
+    JOIN utilisateurs ON annonces.id_utilisateur = utilisateurs.id_utilisateur
+    WHERE annonces.id_annonce = ?`;
+    connection.query(query, [annonceId], (error, results) => {
+        if (error) {
+            console.error('Error while fetching annonce:', error);
+            res.status(500).json({ error: 'Error while fetching annonce' });
+        } else {
+            console.log('Annonce fetched successfully');
+            console.log(results[0]);
+            res.status(200).send(results[0]);
+        }
+    });
+});
 app.post('/annonces-interessees', (req, res) => {
     const { id_banquier, id_annonce } = req.body;
 
