@@ -3,6 +3,7 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="../css/drag&slid.css">
+    <link rel="stylesheet" href="../css/navbar.css">
 </head>
 
 <body>
@@ -27,16 +28,20 @@
 
             </ul>
         </div>
+    </div>Déposez vos fichiers ici</h2>
+
+    <input type="file" id="file_input1" style="display: none;" onchange="handleFileSelect(event, 1)">
+    <input type="file" id="file_input2" style="display: none;" onchange="handleFileSelect(event, 2)">
+    <input type="file" id="file_input3" style="display: none;" onchange="handleFileSelect(event, 3)">
+    
+    <div id="drop_zone1" onclick="handleClick(1)" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event, 1)">
+        <p onclick="handleClick(1)">Pièce d'identité :</p>
     </div>
-    <h2>Drag and Drop File Upload</h2>
-    <div id="drop_zone1" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event, 1)">
-        Drop files here for Upload 1
+    <div id="drop_zone2" onclick="handleClick(2)" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event, 2)">
+        <p onclick="handleClick(2)">Dernier bulletin de salaire :</p>
     </div>
-    <div id="drop_zone2" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event, 2)">
-        Drop files here for Upload 2
-    </div>
-    <div id="drop_zone3" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event, 3)">
-        Drop files here for Upload 3
+    <div id="drop_zone3" onclick="handleClick(3)" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event, 3)">
+        <p onclick="handleClick(3)">Promesse de vente :</p>
     </div>
     <img id="file_icon1" src="../image/image_pdf.png" width="50" height="50" style="display: none;">
     <img id="file_icon2" src="../image/image_pdf.png" width="50" height="50" style="display: none;">
@@ -50,7 +55,24 @@
     <input type="button" value="Supprimer" onclick="deleteFile(3)" id="delete_button3" style="display: none;">
     <input type="button" value="Upload" onclick="uploadFiles()" id="upload_button">
 
+    <style>
+        p {
+            color: black;
+        }
+    </style>
     <script>
+
+
+    function handleClick(id) {
+        document.getElementById('file_input' + id).click();
+    }
+
+    function handleFileSelect(event, id) {
+        selectedFiles[id - 1] = event.target.files[0];
+        document.getElementById('file_icon' + id).style.display = 'block';
+        document.getElementById('file_name' + id).textContent = selectedFiles[id - 1].name;
+        document.getElementById('delete_button' + id).style.display = 'inline-block';
+    }
         let selectedFiles = [null, null, null];
 
         function handleDragOver(event) {
@@ -104,6 +126,8 @@
                     console.error('Error:', error);
                 });
         }
+
+        
     </script>
 
     <button onclick="downloadFile('fichier1-23')">Download File</button>

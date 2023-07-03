@@ -51,7 +51,7 @@ function addAnnonce() {
                             showPopup(data.message, 'success');
                             setTimeout(() => {
                                 console.log('Redirecting to index.html');
-                                window.location.href = '/index';
+                                window.location.href = '/drag&slid';
                             }, 1000);
                         } else {
                             showPopup('error', 'error');

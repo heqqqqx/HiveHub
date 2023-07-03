@@ -56,12 +56,15 @@ app.get('/getTokenPro', (req, res) => {
 app.get('/registerPro', (req, res) => {
     res.sendFile(__dirname + '/public/html/registerPro.html');
 });
+app.get('/drag&slid', (req, res) => {
+    res.sendFile(__dirname + '/public/html/drag&slid.html');
+});
 
 // MySQL Connection
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'root',
+    password: '{Al37_Be36',
     database: 'solution_factory'
 });
 connection.connect(error => {
