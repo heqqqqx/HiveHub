@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(response => {
       if (response.ok) {
         alert('Compte créé avec succès.');
+        return getSession()
       } else {
         response.json().then(data => {
           alert(data.message);
@@ -47,3 +48,31 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 });
+
+function getSession() {
+  fetch('/session', {
+    method: 'GET',
+    credentials: 'include', 
+  })
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error('Erreur de récupération de la session');
+    }
+  })
+  .then(data => {
+    if (Object.keys(data).length === 0) {
+      console.log('No user is logged in');
+    } else {
+      console.log('Logged in user:', data);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
+
+// Call the function
+getSession();
+
