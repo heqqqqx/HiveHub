@@ -610,19 +610,25 @@ app.post('/create-annonce', (req, res) => {
     });
 });
 app.get('/messages', (req, res) => {
-  const id_utilisateur = req.query.id_utilisateur;
-  const id_autre_utilisateur = req.query.id_autre_utilisateur;
-
-  // Vérifier que les ID d'utilisateur sont présents dans la requête
-  if (!id_utilisateur || !id_autre_utilisateur) {
-    res.status(400).send('ID utilisateur manquant');
-    return;
-  }
-
-  // Requête SQL pour récupérer les messages entre les deux utilisateurs
-  const sql = `SELECT * FROM messages WHERE (id_utilisateur_envoyeur = ? AND id_utilisateur_destinataire = ?) OR (id_utilisateur_envoyeur = ? AND id_utilisateur_destinataire = ?)`;
-  const values = [id_utilisateur, id_autre_utilisateur, id_autre_utilisateur, id_utilisateur];
-
+    const id_utilisateur = req.query.id_utilisateur;
+    const id_autre_utilisateur = req.query.id_autre_utilisateur;
+  
+    // Vérifier que les ID utilisateur sont présents dans la requête
+    if (!id_utilisateur || !id_autre_utilisateur) {
+      res.status(400).send('ID utilisateur manquant');
+      return;
+    }
+    console.log("id user: ", id_utilisateur, "req id user", req.session.userId)
+    // Vérifier que l'ID utilisateur correspond à celui de la session active
+    if (parseInt(id_utilisateur) !== req.session.userId) {
+      res.status(403).send('Accès interdit');
+      return;
+    }
+  
+    // Requête SQL pour récupérer les messages entre les deux utilisateurs
+    const sql = `SELECT * FROM messages WHERE (id_utilisateur_envoyeur = ? AND id_utilisateur_destinataire = ?) OR (id_utilisateur_envoyeur = ? AND id_utilisateur_destinataire = ?)`;
+    const values = [id_utilisateur, id_autre_utilisateur, id_autre_utilisateur, id_utilisateur];
+  
   // Exécution de la requête SQL
   connection.query(sql, values, (error, results) => {
     if (error) {
