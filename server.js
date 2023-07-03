@@ -64,7 +64,7 @@ app.get('/drag&slid', (req, res) => {
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '{Al37_Be36',
+    password: 'root',
     database: 'solution_factory'
 });
 connection.connect(error => {
@@ -220,12 +220,40 @@ app.patch('/update-account', (req, res) => {
     })
 });
 app.get('/getdata', (req, res) => {
-    let sql = 'SELECT * FROM annonces';
-    connection.query(sql, (err, results) => {
-        if (err) throw err;
-        console.log(results);
-        res.send(results);
-    });
+    const recherche = req.query.recherche || '';
+  const region = req.query.region || '';
+
+  // Requête SQL pour récupérer les annonces en fonction de la recherche et de la région
+  let sql = `SELECT * FROM annonces`;
+
+  // Ajout des conditions de recherche et de région si elles sont spécifiées
+  const values = [];
+  if (recherche && region) {
+    sql += ` WHERE titre_annonce LIKE ? AND state = ?`;
+    values.push(`%${recherche}%`, region);
+  } else if (recherche) {
+    sql += ` WHERE titre_annonce LIKE ?`;
+    values.push(`%${recherche}%`);
+  } else if (region) {
+    sql += ` WHERE state = ?`;
+    values.push(region);
+  }
+  console.log(sql, values);
+  // Exécution de la requête SQL
+  connection.query(sql, values, (error, results) => {
+    if (error) {
+      console.error('Erreur lors de l\'exécution de la requête : ' + error.stack);
+      res.status(500).send('Erreur serveur');
+      return;
+    }
+
+    if (results.length === 0) {
+        console.log('Aucune annonce trouvée.');
+        const message = 'Aucune annonce trouvée.';
+        res.status(403).send({ message: message });
+      } else {
+        res.json(results);
+      }  });
 });
 app.get('/getmydata', (req, res) => {
     const userId = req.session.userId;
@@ -284,7 +312,7 @@ app.post('/get-email', (req, res) => {
                 } else {
                     console.log('Données insérées avec succès dans la table banquierR. ID inséré:', results.insertId);
                     res.json({ success: true, email, token, registeringTime });
-                    let texte="Bienvenu sur Mon premier bien,\n Pour vous inscrire utiliser le code suivant pour confirmer votre adresse professionelle\n Attention ce code n'est disponible qu'une heure.\n";
+                    let texte="Bienvenue sur Mon premier bien,\n Pour vous inscrire, veuillez utiliser le code suivant pour confirmer votre adresse professionelle\n Attention ce code n'est disponible qu'une heure.\n Le code est le suivant : ";
                     envoyerMail(email, "Inscription Token", texte   +token);
                 }
             });
@@ -719,7 +747,7 @@ app.post('/annonces-interessees', (req, res) => {
                             console.log(email);
                             console.log(results)
                             const id = results[0].id_utilisateur;
-                            envoyerMail(email, "Du nouveau pour ton annonce", `Votre annonce a été marquée comme intéressée par un banquier. Vous pouvez le contacter à partir du lien suivant : http://localhost:3000/messages?id_utilisateur=${id}&id_autre_utilisateur=${id_banquier}`);
+                            envoyerMail(email, "Du nouveau pour ton annonce", `Ton annonce a été ajoutée aux favoris par un banquier. Tu peux le contacter à partir du lien suivant : http://localhost:3000/messages?id_utilisateur=${id}&id_autre_utilisateur=${id_banquier}`);
                         }
                     });
                     res.status(200).send({ message: 'Annonce marquée comme intéressée' });
