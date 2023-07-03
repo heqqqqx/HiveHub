@@ -61,7 +61,7 @@ app.get('/registerPro', (req, res) => {
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '{Al37_Be36',
+    password: 'root',
     database: 'solution_factory'
 });
 connection.connect(error => {
@@ -351,10 +351,11 @@ app.post('/create-accountPro', (req, res) => {
                                     console.error(error);
                                     res.status(500).send({ message: 'Server Error' });
                                 } else {
-
-                                    console.log('User account created:', results.insertId);
+                                    console.log("user id : ", results.insertId)
+                                    req.session.userId = results.insertId;
                                     res.status(200).send({ id: results.insertId, message: 'Account created successfully' });
                                 }
+
                             });
                         }
                     });

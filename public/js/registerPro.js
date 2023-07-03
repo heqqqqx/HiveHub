@@ -32,23 +32,27 @@ document.addEventListener('DOMContentLoaded', function() {
         mot_de_passe
       })
     })
-    .then(response => {
-      if (response.ok) {
-        alert('Compte créé avec succès.');
-        return getSession()
-      } else {
-        response.json().then(data => {
-          alert(data.message);
-        });
+    .then(data => {
+      console.log('In second .then:', data);  
+  
+      if (data.status === 409) {
+          showPopup(data.body.message, 'error');
+      } else if (data.status === 200 ) {
+          showPopup('Account created successfully', 'success');
+          setTimeout(() => {
+              console.log('Redirecting to index.html');  
+              window.location.href = '/index';
+          }, 1000);
+      } else if (data.body.message) {
+          showPopup(data.body.message, 'error');
       }
-    })
-    .catch(error => {
+  })
+  .catch((error) => {
       console.error('Error:', error);
-      alert('Une erreur s\'est produite lors de la création du compte.');
-    });
+  });
+
   });
 });
-
 function getSession() {
   fetch('/session', {
     method: 'GET',
@@ -75,4 +79,27 @@ function getSession() {
 
 // Call the function
 getSession();
+
+function showPopup(message, type) {
+  console.log('Showing popup:', message, type);  
+
+  const popup = document.createElement('div');
+  popup.classList.add('popup', type);
+  popup.textContent = message;
+
+  popup.style.position = 'fixed';
+  popup.style.right = '20px';
+  popup.style.top = '20px';
+  popup.style.backgroundColor = type === 'error' ? 'red' : 'green';  
+  popup.style.color = 'white';  
+  popup.style.padding = '20px';  
+  popup.style.borderRadius = '5px';  
+
+  document.body.appendChild(popup);
+
+  setTimeout(() => {
+      console.log('Removing popup');  
+      popup.remove();
+  }, 1000);
+}
 
