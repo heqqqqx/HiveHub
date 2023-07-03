@@ -95,31 +95,39 @@
                 valuesDiv.innerHTML += "Pour obtenir un prêt, il faut posséder un emploi stable en dehors de la période d'essai.";
             } else {
                 // Calcul du montant du prêt et de la durée
-                var rbcapacity = (parseInt(salaire) + parseInt(revenusExternes) - parseInt(rbPret) - 300 * parseInt(nbEnfants)) * 0.2;
+                var rbcapacity = (parseInt(salaire) + parseInt(revenusExternes) - parseInt(rbPret) - 300 * parseInt(nbEnfants)) * 0.4;
                 var durreannée = parseInt(parseInt(pretDemande * 1.04) / (12 * rbcapacity)) + 1;
                 var yearly = (12 * rbcapacity);
                 var last_year = pretDemande * 1.04 - (12 * rbcapacity * (durreannée - 1));
-        
-                if (durreannée > 25) {
-                    var chartDiv = document.createElement("div");
-                    var capacity_max = rbcapacity * 12 * 25;
-                    var capacityChart = createChart(capacity_max + " €", "Prêt maximal possible");
-                    chartDiv.appendChild(capacityChart);
-                    valuesDiv.appendChild(chartDiv);
-                } else if (rbcapacity < 0) {
+                let a= "Le montant du prêt";
+                console.log(rbcapacity);
+                if (rbcapacity < 0) {
                     valuesDiv.innerHTML = "Pourquoi demander un prêt";
+                    
                 } else {
                     // Création des graphiques circulaires
                     var chartDiv = document.createElement("div");
                     chartDiv.className = "chart";
-        
+                    if(durreannée>25){
+                        console.log("maximal pret")
+                        durreannée=26;
+                        pretDemande=12*25*rbcapacity
+                        yearly=12*rbcapacity
+                        last_year=pretDemande*0.04
+                        a="Montant maximal de prêt possible"
+                    }
                     // Capacité de remboursement estimée
-                    var capacityChart = createChart(rbcapacity + " €", "Votre Capacité de remboursement mensuel");
-                    chartDiv.appendChild(capacityChart);
+                    var totalpret = createChart(pretDemande + " €",a);
+                    chartDiv.appendChild(totalpret);
         
                     // Durée du prêt
                     var durationChart = createChart(durreannée + " ans", "Durée du prêt (années)");
                     chartDiv.appendChild(durationChart);
+
+                    
+                    // Capacité de remboursement estimée
+                    var capacityChart = createChart(rbcapacity + " €", "Votre Capacité de remboursement mensuel");
+                    chartDiv.appendChild(capacityChart);
         
                     // Remboursement annuel
                     var yearlyChart = createChart(yearly + " €", "Remboursement annuel");
@@ -129,7 +137,7 @@
                     var lastYearChart = createChart(last_year + " €", "Montant la dernière année");
                     chartDiv.appendChild(lastYearChart);
 
-                    var taux = createChart(+ "4 %", "Taux d'intéret");
+                    var taux = createChart( "4 %", "Taux d'intéret");
                     chartDiv.appendChild(taux);
 
                     
