@@ -27,6 +27,7 @@ Pour installer et exécuter ce projet localement, suivez les étapes ci-dessous 
 Clonez ce dépôt de code sur votre machine locale :
 
 git clone https://github.com/heqqqqx/HiveHub.git
+
 Accédez au répertoire du projet :
 
 ```cd solution-factory```
