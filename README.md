@@ -12,13 +12,13 @@ Un navigateur web moderne (Google Chrome, Mozilla Firefox, etc.)
 
 Pour installer les framework, ouvrir un invité de commande et entrer les commandes suivantes :
 
-npm install express
+```cmd npm install express
 npm install mysql
 npm install bcryptjs
 npm install express-session
 npm install multer
 npm install nodemailer
-npm install @google-cloud/storage
+npm install @google-cloud/storage```
 
 
 #Installation
@@ -29,7 +29,7 @@ Clonez ce dépôt de code sur votre machine locale :
 git clone https://github.com/heqqqqx/HiveHub.git
 Accédez au répertoire du projet :
 
-cd solution-factory
+```cd solution-factory```
 
 #Database 
 
