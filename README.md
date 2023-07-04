@@ -30,6 +30,7 @@ Pour installer les framework, ouvrir un invité de commande et entrer les comman
 
 
 #Installation
+
 Pour installer et exécuter ce projet localement, suivez les étapes ci-dessous :
 
 Clonez ce dépôt de code sur votre machine locale :
@@ -43,8 +44,11 @@ Accédez au répertoire du projet :
 #Database 
 
 Configurez la base de données MySQL :
+
 Assurez-vous que vous avez un serveur MySQL en cours d'exécution sur votre machine.
+
 Créez une base de données nommée "solution_factory".
+
 Importez le script SQL fourni.
 
 N'oubliez pas de mettre à jour votre identifiant et mot de passe du serveur mySQL dans le fichier server.js
