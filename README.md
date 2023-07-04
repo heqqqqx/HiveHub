@@ -30,6 +30,8 @@ Pour installer les framework, ouvrir un invité de commande et entrer les comman
 
 ```npm install moment```
 
+``` npm install archiver```
+
 
 #Installation
 
