@@ -83,15 +83,16 @@ fetch('http://localhost:3000/session')
                             if (btnText === "Voir plus") {
                                 event.target.innerText = "Voir moins";
                                 const annonce = data[event.target.dataset.index];
+                                console.log(annonce)
                                 const rightElement = document.createElement('div');
 
                                 rightElement.innerHTML = `
                                     <div class="attribut">
-                                        <span class="attribut_label"><h3>Prix du bien:</h3></span>
+                                        <span class="attribut_label"><h3>Prix du bien (€):</h3></span>
                                         <div class="editable-value" data-field="prix_bien" data-type="annonce">${annonce.prix_bien}</div>
                                         </div>
                                     <div class="attribut">
-                                        <span class="attribut_label"><h3>Surface:</h3></span>
+                                        <span class="attribut_label"><h3>Surface (m²):</h3></span>
                                         <div class="editable-value" data-field="surface" data-type="annonce">${annonce.surface}</div>
                                         </div>
                                     <div class="attribut">
@@ -110,10 +111,14 @@ fetch('http://localhost:3000/session')
                                         <span class="attribut_label"><h3>Ville:</h3></span>
                                         <div class="editable-value" data-field="city" data-type="annonce">${annonce.city}</div>
                                         </div>
-                                    <button class="message-button" type="button">Voir message</button>
-                                `;
+                                    <br>
+                                    <button class="message-button" type="button">Envoyer un message au client</button> <br><br>
+                                    <button class="download" data-annonce-id="${annonce.id_annonce}">Télécharger les fichiers</button>
+                                    `;
 
-                                rightDisplay.innerHTML = '';
+                                    console.log(annonce.id_annonce);
+                                    rightElement.querySelector(".download").addEventListener("click", (event) => downloadFiles(event, data));
+                                    rightDisplay.innerHTML = '';
                                 rightDisplay.appendChild(rightElement);
                                 rightPanel.classList.remove('hidden');
                                 rightElement.querySelectorAll('.message-button').forEach((messageButton) => {
@@ -293,13 +298,13 @@ fetch('http://localhost:3000/session')
 
                                 rightElement.innerHTML = `
             <div class="attribut">
-              <span class="attribut_label"><h3>Prix du bien:</h3></span>
+              <span class="attribut_label"><h3>Prix du bien (€):</h3></span>
               <div class="editable-value" data-field="prix_bien" data-type="annonce">${annonce.prix_bien}</div>
               <button class="edit-button">Modifier</button>
               <button class="save-button" style="display: none;">Enregistrer</button>
             </div>
             <div class="attribut">
-              <span class="attribut_label"><h3>Surface:</h3></span>
+              <span class="attribut_label"><h3>Surface (m²):</h3></span>
               <div class="editable-value" data-field="surface" data-type="annonce">${annonce.surface}</div>
               <button class="edit-button">Modifier</button>
               <button class="save-button" style="display: none;">Enregistrer</button>
@@ -442,3 +447,69 @@ function voirMessage() {
 
 
 }
+console.log(annonce.id_annonce);
+function downloadFiles(event, data) {
+    const btnElement = event.currentTarget;
+    const annonceId = btnElement.getAttribute('data-annonce-id');
+    console.log(annonceId);
+
+    const dataIndex = Number(btnElement.getAttribute('data-index'));
+
+    if (isNaN(dataIndex)) {
+        console.error('Error: Invalid data-index value');
+        return;
+    }
+
+    const annonceData = data[dataIndex];
+
+    if (!annonceData) {
+        console.error('Error: No data found for index', dataIndex);
+        return;
+    }
+
+    // Récupérer l'id_utilisateur en appelant l'API
+    fetch(`/get-userId/${annonceId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
+        .then(data => {
+            const userId = data.id_utilisateur;
+            console.log(userId);
+
+            const options = ['identity', 'salary', 'sale'];
+
+            // Télécharger les fichiers
+            options.reduce((promiseChain, option) => {
+                return promiseChain.then(() => {
+                    // Récupérer les fichiers en appelant l'API de téléchargement
+                    return fetch(`/download/${option}/${userId}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Network response was not ok");
+                            }
+                            return response.blob();
+                        })
+                        .then(blob => {
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.style.display = 'none';
+                            a.href = url;
+                            a.download = `${option}-${userId}.pdf`;
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                        });
+                });
+            }, Promise.resolve())
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+

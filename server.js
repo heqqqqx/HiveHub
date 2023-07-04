@@ -13,6 +13,8 @@ const crypto = require('crypto');
 const fs = require('fs');
 const moment = require('moment');
 const date_envoi = moment().format('YYYY-MM-DD HH:mm:ss');
+const archiver = require('archiver');
+
 
 // Crée un client
 const storage = new Storage({ keyFilename: "helpful-pixel-389707-0ca50844ca16.json" });
@@ -64,7 +66,7 @@ app.get('/drag&slid', (req, res) => {
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '{Al37_Be36',
+    password: 'root',
     database: 'solution_factory'
 });
 connection.connect(error => {
@@ -220,11 +222,40 @@ app.patch('/update-account', (req, res) => {
     })
 });
 app.get('/getdata', (req, res) => {
-    let sql = 'SELECT * FROM annonces';
-    connection.query(sql, (err, results) => {
-        if (err) throw err;
-        console.log(results);
-        res.send(results);
+    const recherche = req.query.recherche || '';
+    const region = req.query.region || '';
+
+    // Requête SQL pour récupérer les annonces en fonction de la recherche et de la région
+    let sql = `SELECT * FROM annonces`;
+
+    // Ajout des conditions de recherche et de région si elles sont spécifiées
+    const values = [];
+    if (recherche && region) {
+        sql += ` WHERE titre_annonce LIKE ? AND state = ?`;
+        values.push(`%${recherche}%`, region);
+    } else if (recherche) {
+        sql += ` WHERE titre_annonce LIKE ?`;
+        values.push(`%${recherche}%`);
+    } else if (region) {
+        sql += ` WHERE state = ?`;
+        values.push(region);
+    }
+    console.log(sql, values);
+    // Exécution de la requête SQL
+    connection.query(sql, values, (error, results) => {
+        if (error) {
+            console.error('Erreur lors de l\'exécution de la requête : ' + error.stack);
+            res.status(500).send('Erreur serveur');
+            return;
+        }
+
+        if (results.length === 0) {
+            console.log('Aucune annonce trouvée.');
+            const message = 'Aucune annonce trouvée.';
+            res.status(403).send({ message: message });
+        } else {
+            res.json(results);
+        }
     });
 });
 app.get('/getmydata', (req, res) => {
@@ -245,7 +276,7 @@ app.get('/getmydata', (req, res) => {
     });
 });
 
-const allowedDomains = ['@efrei.net', '@societegenerale.fr', ];
+const allowedDomains = ['@efrei.net', '@societegenerale.fr',];
 app.post('/get-email', (req, res) => {
     const { email } = req.body;
     console.log('E-mail récupéré:', email);
@@ -284,7 +315,8 @@ app.post('/get-email', (req, res) => {
                 } else {
                     console.log('Données insérées avec succès dans la table banquierR. ID inséré:', results.insertId);
                     res.json({ success: true, email, token, registeringTime });
-                    envoyerMail(email, "Inscription Token", token);
+                    let texte = "Bienvenue sur Mon premier bien,\n Pour vous inscrire, veuillez utiliser le code suivant pour confirmer votre adresse professionelle\n Attention ce code n'est disponible qu'une heure.\n Le code est le suivant : ";
+                    envoyerMail(email, "Inscription Token", texte + token);
                 }
             });
         }
@@ -491,7 +523,7 @@ app.post('/upload', upload.fields([{ name: 'identity', maxCount: 1 }, { name: 's
         console.log(`${newFilename} uploaded to ${bucketName}.`);
     }
 
-    const userId = req.session.userId; 
+    const userId = req.session.userId;
     console.log(`User ID from session: ${userId}`);
 
     if (req.files) {
@@ -507,7 +539,7 @@ app.post('/upload', upload.fields([{ name: 'identity', maxCount: 1 }, { name: 's
                         status: 'error',
                         message: `Failed to upload ${type} file.`,
                     });
-                    return; // important to prevent further execution in case of an error
+                    return;
                 }
             }
         }
@@ -523,46 +555,31 @@ app.post('/upload', upload.fields([{ name: 'identity', maxCount: 1 }, { name: 's
 
 
 
-app.get('/download/:fileId', async(req, res) => {
-    const fileId = req.params.fileId;
-    console.log('File ID:', fileId);
+app.get('/download/:option/:userId', async (req, res) => {
+    const userId = req.params.userId;
+    const option = req.params.option;
 
-    const tmpDir = os.tmpdir();
-    console.log('Temp directory:', tmpDir);
-
-    console.log('Temp directory:', tmpDir);
-    console.log('File ID:', fileId);
-
-    const filePath = path.join(tmpDir, fileId);
-    console.log('File path:', filePath);
-
-    const destination = filePath;
-    const options = {
-        destination: destination,
-    };
+    // définir le nom du fichier en fonction du userId et de l'option
+    const fileName = `${option}-${userId}`;
 
     try {
-        await storage.bucket(bucketName).file(fileId).download(options);
-        console.log(`File ${fileId} downloaded to ${destination}`);
-        console.log('Check if file exists:', fs.existsSync(destination));
+        const file = storage
+            .bucket(bucketName)
+            .file(fileName)
+            .createReadStream();
+            
+        // Définir les en-têtes
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename=${fileName}.pdf`);
+
+        // Envoyer le fichier
+        file.pipe(res);
     } catch (error) {
-        console.error(`Error downloading file ${fileId}:`, error);
-        res.status(500).send('Error downloading file');
-        return;
+        console.error('Error downloading file:', error);
+        res.status(500).send({ status: 'error', message: 'Error downloading file.' });
     }
-
-    console.log(`Sending file ${fileId} to client...`);
-    console.log('Path to send file:', destination);
-
-    try {
-        res.download(destination);
-        console.log(`File ${fileId} sent to client`);
-    } catch (error) {
-        console.error(`Error sending file ${fileId} to client:`, error);
-        res.status(500).send('Error sending file to client');
-    }
-
 });
+
 
 
 
@@ -581,70 +598,76 @@ app.post('/create-annonce', (req, res) => {
     });
 });
 app.get('/messages', (req, res) => {
-  const id_utilisateur = req.query.id_utilisateur;
-  const id_autre_utilisateur = req.query.id_autre_utilisateur;
+    const id_utilisateur = req.query.id_utilisateur;
+    const id_autre_utilisateur = req.query.id_autre_utilisateur;
 
-  // Vérifier que les ID d'utilisateur sont présents dans la requête
-  if (!id_utilisateur || !id_autre_utilisateur) {
-    res.status(400).send('ID utilisateur manquant');
-    return;
-  }
-
-  // Requête SQL pour récupérer les messages entre les deux utilisateurs
-  const sql = `SELECT * FROM messages WHERE (id_utilisateur_envoyeur = ? AND id_utilisateur_destinataire = ?) OR (id_utilisateur_envoyeur = ? AND id_utilisateur_destinataire = ?)`;
-  const values = [id_utilisateur, id_autre_utilisateur, id_autre_utilisateur, id_utilisateur];
-
-  // Exécution de la requête SQL
-  connection.query(sql, values, (error, results) => {
-    if (error) {
-      console.error('Erreur lors de l\'exécution de la requête : ' + error.stack);
-      res.status(500).send('Erreur serveur');
-      return;
+    // Vérifier que les ID utilisateur sont présents dans la requête
+    if (!id_utilisateur || !id_autre_utilisateur) {
+        res.status(400).send('ID utilisateur manquant');
+        return;
+    }
+    console.log("id user: ", id_utilisateur, "req id user", req.session.userId)
+    // Vérifier que l'ID utilisateur correspond à celui de la session active
+    if (parseInt(id_utilisateur) !== req.session.userId) {
+        res.status(403).send('Accès interdit');
+        return;
     }
 
-    // Construction du titre de la page
-    const pageTitle = `Messages à ${id_autre_utilisateur}`;
+    // Requête SQL pour récupérer les messages entre les deux utilisateurs
+    const sql = `SELECT * FROM messages WHERE (id_utilisateur_envoyeur = ? AND id_utilisateur_destinataire = ?) OR (id_utilisateur_envoyeur = ? AND id_utilisateur_destinataire = ?)`;
+    const values = [id_utilisateur, id_autre_utilisateur, id_autre_utilisateur, id_utilisateur];
 
-    // Construction du contenu de la div des messages
-    let messagesContent = '';
-    for (const message of results) {
-    let messageClass = 'message-user'; // Déclarer la variable à l'extérieur des blocs if/else
-    console.log(message.id_utilisateur_envoyeur);
-    console.log(id_utilisateur);
-    if (parseInt(message.id_utilisateur_envoyeur) === parseInt(id_utilisateur)) {
-        messageClass = 'message-user';
-        console.log('message-user')
-    } else {
-        messageClass = 'message-other';
-        console.log('message-other')
+    // Exécution de la requête SQL
+    connection.query(sql, values, (error, results) => {
+        if (error) {
+            console.error('Erreur lors de l\'exécution de la requête : ' + error.stack);
+            res.status(500).send('Erreur serveur');
+            return;
+        }
 
-    }
+        // Construction du titre de la page
+        const pageTitle = `Messages à ${id_autre_utilisateur}`;
 
-    messagesContent += `
+        // Construction du contenu de la div des messages
+        let messagesContent = '';
+        for (const message of results) {
+            let messageClass = 'message-user'; // Déclarer la variable à l'extérieur des blocs if/else
+            console.log(message.id_utilisateur_envoyeur);
+            console.log(id_utilisateur);
+            if (parseInt(message.id_utilisateur_envoyeur) === parseInt(id_utilisateur)) {
+                messageClass = 'message-user';
+                console.log('message-user')
+            } else {
+                messageClass = 'message-other';
+                console.log('message-other')
+
+            }
+
+            messagesContent += `
         <div class="message">
         <div class="message-content ${messageClass}">${message.contenu}
         <div class="message-date">${message.date_envoi}</div></div>
         </div>
     `;
-    }
+        }
 
 
-    // Lecture du fichier du modèle de message
-    fs.readFile('public/html/message.html', 'utf8', (err, data) => {
-      if (err) {
-        console.error('Erreur lors de la lecture du fichier de modèle : ' + err.stack);
-        res.status(500).send('Erreur serveur');
-        return;
-      }
+        // Lecture du fichier du modèle de message
+        fs.readFile('public/html/message.html', 'utf8', (err, data) => {
+            if (err) {
+                console.error('Erreur lors de la lecture du fichier de modèle : ' + err.stack);
+                res.status(500).send('Erreur serveur');
+                return;
+            }
 
-      // Remplacement des placeholders dans le modèle avec les données
-      const htmlContent = data
-        .replace('{{pageTitle}}', pageTitle)
-        .replace('{{messagesContent}}', messagesContent);
+            // Remplacement des placeholders dans le modèle avec les données
+            const htmlContent = data
+                .replace('{{pageTitle}}', pageTitle)
+                .replace('{{messagesContent}}', messagesContent);
 
-      res.send(htmlContent);
+            res.send(htmlContent);
+        });
     });
-  });
 });
 
 app.post('/save-message', (req, res) => {
@@ -652,23 +675,23 @@ app.post('/save-message', (req, res) => {
     const date_envoi = new Date().toLocaleString('en-US', { timeZone: 'UTC' });
 
     const lu = 0;
-  
+
     console.log(message + " envoyeur:" + id_utilisateur + " receveur:" + id_autre_utilisateur);
-  
+
     const query = `INSERT INTO messages (id_utilisateur_envoyeur, id_utilisateur_destinataire, contenu, date_envoi, lu)
                    VALUES (?, ?, ?, ?, ?)`;
-  
+
     connection.query(query, [parseInt(id_utilisateur), parseInt(id_autre_utilisateur), message, date_envoi, lu], (error, results) => {
-      if (error) {
-        console.error('Error while saving the message:', error);
-        res.status(500).json({ error: 'Error while saving the message' });
-      } else {
-        console.log('Message saved successfully');
-        res.status(200).json({ success: 'Message saved successfully' });
-      }
+        if (error) {
+            console.error('Error while saving the message:', error);
+            res.status(500).json({ error: 'Error while saving the message' });
+        } else {
+            console.log('Message saved successfully');
+            res.status(200).json({ success: 'Message saved successfully' });
+        }
     });
-  });
-  
+});
+
 app.get('/get-userId/:annonceId', (req, res) => {
     const annonceId = req.params.annonceId;
     const query = `SELECT utilisateurs.id_utilisateur
@@ -703,12 +726,12 @@ app.post('/annonces-interessees', (req, res) => {
                     console.error(error);
                     res.status(500).send({ message: 'Server Error' });
                 } else {
-                    const newQuery = `SELECT utilisateurs.email
+                    const newQuery = `SELECT utilisateurs.email, utilisateurs.id_utilisateur
                     FROM annonces
                     JOIN utilisateurs ON annonces.id_utilisateur = utilisateurs.id_utilisateur
                     WHERE annonces.id_annonce =?;
                     `;
-                    connection.query(newQuery, [id_annonce],(error, results) => {
+                    connection.query(newQuery, [id_annonce], (error, results) => {
                         if (error) {
                             console.error(error);
                             res.status(500).send({ message: 'Server Error' });
@@ -716,7 +739,9 @@ app.post('/annonces-interessees', (req, res) => {
                             console.log("mail: ", results);
                             const email = results[0].email;
                             console.log(email);
-                            envoyerMail(email, "Du nouveau pour ton annonce", "Votre annonce a été marquée comme intéressée par un banquier. Vous pouvez le contacter depuis notre site.");
+                            console.log(results)
+                            const id = results[0].id_utilisateur;
+                            envoyerMail(email, "Du nouveau pour ton annonce", `Ton annonce a été ajoutée aux favoris par un banquier. Tu peux le contacter à partir du lien suivant : http://localhost:3000/messages?id_utilisateur=${id}&id_autre_utilisateur=${id_banquier}`);
                         }
                     });
                     res.status(200).send({ message: 'Annonce marquée comme intéressée' });

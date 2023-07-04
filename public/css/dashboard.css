@@ -42,3 +42,21 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
+.download {
+    background-color: #4285f4;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.message-button {
+    background-color: #4285f4;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}

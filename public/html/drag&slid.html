@@ -28,34 +28,47 @@
 
             </ul>
         </div>
-    </div>Déposez vos fichiers ici</h2>
-    
-    <input type="file" id="file_input1" name="identity" style="display: none;" onchange="handleFileSelect(event, 1)">
-    <input type="file" id="file_input2" name="salary" style="display: none;" onchange="handleFileSelect(event, 2)">
-    <input type="file" id="file_input3" name="sale" style="display: none;" onchange="handleFileSelect(event, 3)">
-    
-    
-    <div id="drop_zone1" onclick="handleClick(1)" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event, 1)">
-        <p onclick="handleClick(1)">Pièce d'identité :</p>
-    </div>
-    <div id="drop_zone2" onclick="handleClick(2)" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event, 2)">
-        <p onclick="handleClick(2)">Dernier bulletin de salaire :</p>
-    </div>
-    <div id="drop_zone3" onclick="handleClick(3)" ondragover="handleDragOver(event)" ondrop="handleFileDrop(event, 3)">
-        <p onclick="handleClick(3)">Promesse de vente :</p>
-    </div>
-    <img id="file_icon1" src="../image/image_pdf.png" width="50" height="50" style="display: none;">
-    <img id="file_icon2" src="../image/image_pdf.png" width="50" height="50" style="display: none;">
-    <img id="file_icon3" src="../image/image_pdf.png" width="50" height="50" style="display: none;">
-    <br>
-    <p id="file_name1"></p>
-    <p id="file_name2"></p>
-    <p id="file_name3"></p>
-    <input type="button" value="Supprimer" onclick="deleteFile(1)" id="delete_button1" style="display: none;">
-    <input type="button" value="Supprimer" onclick="deleteFile(2)" id="delete_button2" style="display: none;">
-    <input type="button" value="Supprimer" onclick="deleteFile(3)" id="delete_button3" style="display: none;">
-    <input type="button" value="Upload" onclick="uploadFiles()" id="upload_button">
 
+    </div>
+    <div class="main-content">
+        <h2>Déposez vos fichiers ici</h2>
+
+        <input type="file" id="file_input1" name="identity" style="display: none;"
+            onchange="handleFileSelect(event, 1)">
+        <input type="file" id="file_input2" name="salary" style="display: none;" onchange="handleFileSelect(event, 2)">
+        <input type="file" id="file_input3" name="sale" style="display: none;" onchange="handleFileSelect(event, 3)">
+
+
+        <div id="drop_zone1" onclick="handleClick(1)" ondragover="handleDragOver(event)"
+            ondrop="handleFileDrop(event, 1)">
+            <p onclick="handleClick(1)">Pièce d'identité :</p>
+        </div>
+        <div id="drop_zone2" onclick="handleClick(2)" ondragover="handleDragOver(event)"
+            ondrop="handleFileDrop(event, 2)">
+            <p onclick="handleClick(2)">Dernier bulletin de salaire :</p>
+        </div>
+        <div id="drop_zone3" onclick="handleClick(3)" ondragover="handleDragOver(event)"
+            ondrop="handleFileDrop(event, 3)">
+            <p onclick="handleClick(3)">Promesse de vente :</p>
+        </div>
+        <div id="zone1" style="display: flex; align-items: center;">
+            <img id="file_icon1" src="../image/image_pdf.png" width="50" height="50" style="display: none;margin: 20px;">
+            <p id="file_name1"></p>
+            <input type="button" class="delete_button" value="Supprimer" onclick="deleteFile(1)" id="delete_button1" style="display: none;margin: 20px;">
+        </div>
+        <div id="zone2" style="display: flex; align-items: center;">
+            <img id="file_icon2" src="../image/image_pdf.png" width="50" height="50" style="display: none;margin: 20px;">
+            <p id="file_name2"></p>
+            <input type="button" class="delete_button" value="Supprimer" onclick="deleteFile(2)" id="delete_button2" style="display: none;margin: 20px;">
+        </div>
+        <div id="zone3" style="display: flex; align-items: center;">
+            <img id="file_icon3" src="../image/image_pdf.png" width="50" height="50" style="display: none;margin: 20px;">
+            <p id="file_name3"></p>
+            <input type="button" class="delete_button" value="Supprimer" onclick="deleteFile(3)" id="delete_button3" style="display: none;margin: 20px;">
+        </div>
+        
+        <input type="button" value="Upload" onclick="uploadFiles()" id="upload_button">
+    </div>
     <style>
         p {
             color: black;
@@ -64,16 +77,16 @@
     <script>
 
 
-    function handleClick(id) {
-        document.getElementById('file_input' + id).click();
-    }
+        function handleClick(id) {
+            document.getElementById('file_input' + id).click();
+        }
 
-    function handleFileSelect(event, id) {
-        selectedFiles[id - 1] = event.target.files[0];
-        document.getElementById('file_icon' + id).style.display = 'block';
-        document.getElementById('file_name' + id).textContent = selectedFiles[id - 1].name;
-        document.getElementById('delete_button' + id).style.display = 'inline-block';
-    }
+        function handleFileSelect(event, id) {
+            selectedFiles[id - 1] = event.target.files[0];
+            document.getElementById('file_icon' + id).style.display = 'block';
+            document.getElementById('file_name' + id).textContent = selectedFiles[id - 1].name;
+            document.getElementById('delete_button' + id).style.display = 'inline-block';
+        }
         let selectedFiles = [null, null, null];
 
         function handleDragOver(event) {
@@ -100,40 +113,40 @@
         }
 
         function uploadFiles() {
-  console.log('Uploading files...');
-  let formData = new FormData();
-  
-  let fieldNames = ["identity", "salary", "sale"];
-  
-  selectedFiles.forEach((file, index) => {
-    if (file) {
-      console.log(`Adding file ${index} to form data.`);
-      
-      formData.append(fieldNames[index], file);
-    }
-  });
+            console.log('Uploading files...');
+            let formData = new FormData();
 
-  fetch('/upload', {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => {
-    console.log('Response received:', response);
-    return response.json();
-  })
-  .then(result => {
-    console.log('Success:', result);
-    for (let id = 1; id <= 3; id++) {
-      deleteFile(id);
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
-}
+            let fieldNames = ["identity", "salary", "sale"];
+
+            selectedFiles.forEach((file, index) => {
+                if (file) {
+                    console.log(`Adding file ${index} to form data.`);
+                    formData.append(fieldNames[index], file);
+                }
+            });
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    console.log('Response received:', response);
+                    return response.json();
+                })
+                .then(result => {
+                    console.log('Success:', result);
+                    for (let id = 1; id <= 3; id++) {
+                        deleteFile(id);
+                    }
+                    window.location.href = "/dashboard"
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
 
 
-        
+
     </script>
 
     <button onclick="downloadFile('fichier1-23')">Download File</button>
