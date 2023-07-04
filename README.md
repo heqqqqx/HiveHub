@@ -39,7 +39,7 @@ git clone https://github.com/heqqqqx/HiveHub.git
 
 Accédez au répertoire du projet :
 
-```cd solution-factory```
+```cd HiveHub```
 
 #Database 
 
@@ -56,6 +56,8 @@ N'oubliez pas de mettre à jour votre identifiant et mot de passe du serveur myS
 
 Vous pouvez maintenant lancer le serveur en utilisant la commande suivante :
 
-```cmd node server.js```
+```node server.js```
+
+Pour vous créer un compte administrateur, vous devez ajouter "/getTokenpro" à la fin de l'URL. Ensuite renseignez votre addresse mail efrei. Vous recevrez ensuite un token qu'il faudra renseigner dans le formulaire pour vous créer un compte de type "banquier".
 
 Et vous pouvez accéder au site sur [cet URL en local](http://localhost:3000/), ou [cet URL depuis n'importe quel ordinateur](http://77.68.80.193:3000/).
