@@ -28,6 +28,8 @@ Pour installer les framework, ouvrir un invité de commande et entrer les comman
 
 ```npm install @google-cloud/storage```
 
+```npm install moment```
+
 
 #Installation
 
