@@ -5,7 +5,9 @@ Ce projet est une application web développée avec Node.js et Express.js. Il s'
 #Avant de commencer, assurez-vous de disposer des éléments suivants :
 
 Un ordinateur avec une connexion Internet
+
 [Node.js installé sur votre machine](https://nodejs.org/fr/download)
+
 Un navigateur web moderne (Google Chrome, Mozilla Firefox, etc.)
 
 #Frameworks :
@@ -13,11 +15,17 @@ Un navigateur web moderne (Google Chrome, Mozilla Firefox, etc.)
 Pour installer les framework, ouvrir un invité de commande et entrer les commandes suivantes :
 
 ```npm install express```
+
 ```npm install mysql```
+
 ```npm install bcryptjs```
+
 ```npm install express-session```
+
 ```npm install multer```
+
 ```npm install nodemailer```
+
 ```npm install @google-cloud/storage```
 
 
